@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AIR_Wheely_Common\AIR_Wheely_Common.csproj" />
+    <ProjectReference Include="..\AIR_Whelly_DAL\AIR_Whelly_DAL.csproj" />
+  </ItemGroup>
+
+</Project>
