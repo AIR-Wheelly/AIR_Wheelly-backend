@@ -14,7 +14,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   api:
-    image: wheelly_dev:latest
+    image: wheelly_api:latest
     container_name: wheelly_api
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
