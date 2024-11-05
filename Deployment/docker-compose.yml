@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: P@55w0rd
+      POSTGRES_DB: wheely_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    image: wheelly_api:latest
+    container_name: wheelly_api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+
+volumes:
+  pgdata:

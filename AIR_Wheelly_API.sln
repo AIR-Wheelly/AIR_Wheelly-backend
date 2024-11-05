@@ -3,18 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIR_Whelly_API", "AIR_Whelly_API\AIR_Whelly_API.csproj", "{8E617671-6126-4B26-8D06-D13845B49D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIR_Wheelly_API", "AIR_Wheelly_API\AIR_Wheelly_API.csproj", "{8E617671-6126-4B26-8D06-D13845B49D9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2932082-DCFD-46E7-832D-D17369EBFFCD}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIR_Whelly_BLL", "AIR_Whelly_BLL\AIR_Whelly_BLL.csproj", "{21D1CB77-14ED-43F2-8782-377AE378AC48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIR_Wheelly_BLL", "AIR_Wheelly_BLL\AIR_Wheelly_BLL.csproj", "{21D1CB77-14ED-43F2-8782-377AE378AC48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIR_Whelly_DAL", "AIR_Whelly_DAL\AIR_Whelly_DAL.csproj", "{F8F643AC-8152-42C2-B3F7-14D22B18CF82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIR_Wheelly_DAL", "AIR_Wheelly_DAL\AIR_Wheelly_DAL.csproj", "{F8F643AC-8152-42C2-B3F7-14D22B18CF82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIR_Wheely_Common", "AIR_Wheely_Common\AIR_Wheely_Common.csproj", "{3B6D29CA-11E1-4B28-9AB6-E92F8BB64B10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIR_Wheelly_Common", "AIR_Wheelly_Common\AIR_Wheelly_Common.csproj", "{3B6D29CA-11E1-4B28-9AB6-E92F8BB64B10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{5B3363ED-2DCC-459D-B5CB-704747E1369F}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +47,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B3363ED-2DCC-459D-B5CB-704747E1369F} = {E2932082-DCFD-46E7-832D-D17369EBFFCD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B334CADB-046F-4023-A4E6-1808A0AA6C80}

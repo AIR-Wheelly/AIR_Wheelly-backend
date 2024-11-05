@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AIR_Wheely_Common\AIR_Wheely_Common.csproj" />
+    <ProjectReference Include="..\AIR_Wheelly_Common\AIR_Wheelly_Common.csproj" />
   </ItemGroup>
 
 </Project>
