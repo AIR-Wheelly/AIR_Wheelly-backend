@@ -1,4 +1,5 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace AIR_Wheelly_DAL.Repositories {
     public class Repository<T> : IRepository<T> where T : class {
-        protected readonly DbContext _context;
+        protected readonly ApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(DbContext context) {
+        public Repository(ApplicationDbContext context) {
             _context = context;
             _dbSet = _context.Set<T>();
         }

@@ -1,4 +1,5 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_DAL.Data;
 using AIR_Wheelly_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,6 +10,6 @@ using System.Threading.Tasks;
 
 namespace AIR_Wheelly_DAL.Repositories {
     public class UserRepository : Repository<User>, IUserRepository {
-        public UserRepository(DbContext context) : base(context) { }
+        public UserRepository(ApplicationDbContext context) : base(context) { }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_DAL.Data;
 using AIR_Wheelly_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace AIR_Wheelly_DAL {
     public class UnitOfWork : IUnitOfWork, IDisposable {
-        private readonly DbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed = false;
 
-        public UnitOfWork(DbContext context, IServiceProvider serviceProvider) {
+        public UnitOfWork(ApplicationDbContext context, IServiceProvider serviceProvider) {
             _context = context;
             _serviceProvider = serviceProvider;
         }
