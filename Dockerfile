@@ -16,7 +16,10 @@ RUN dotnet publish -c Release -o /out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /out .
+COPY Deployment/entrypoint.sh /entrypoint.sh
 
+# Set executable permission on the script
+RUN chmod +x /entrypoint.sh
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "AIR_Wheelly_API.dll"]
+ENTRYPOINT ["/entrypoint.sh"]

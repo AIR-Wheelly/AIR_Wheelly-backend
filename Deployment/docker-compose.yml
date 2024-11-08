@@ -22,6 +22,12 @@ services:
       - "8080:8080"
     depends_on:
       - postgres-db
+    command : >
+      sh -c "dotnet ef database update --no build && dotnet run"
+    
+
+
+  
 
 volumes:
   pgdata:
