@@ -59,26 +59,6 @@ namespace AIR_Wheelly_DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 11, 7, 21, 51, 11, 50, DateTimeKind.Utc).AddTicks(1236),
-                            Email = "john.doe@example.com",
-                            FirstName = "John",
-                            LastName = "Doe",
-                            Password = "password123"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 11, 7, 21, 51, 11, 50, DateTimeKind.Utc).AddTicks(1262),
-                            Email = "jane.smith@example.com",
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            Password = "password456"
-                        });
                 });
 #pragma warning restore 612, 618
         }
