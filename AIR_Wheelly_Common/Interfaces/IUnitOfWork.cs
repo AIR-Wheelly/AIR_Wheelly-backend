@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AIR_Wheelly_Common.Interfaces {
     public interface IUnitOfWork {
+        IUserRepository UserRepository { get; }
+
+
         public Task<int> CompleteAsync();
     }
 }
