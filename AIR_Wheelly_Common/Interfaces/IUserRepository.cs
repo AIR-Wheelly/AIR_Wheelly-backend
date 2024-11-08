@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 
 namespace AIR_Wheelly_Common.Interfaces {
     public interface IUserRepository: IRepository<User> {
+        Task<User> GetUserByEmailAsync(string email);
+
     }
 }

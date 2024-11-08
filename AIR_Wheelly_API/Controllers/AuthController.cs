@@ -23,5 +23,20 @@ namespace AIR_Wheelly_API.Controllers {
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginUserDto dto)
+        {
+            try
+            {
+                var result = await _authService.LoginUser(dto);
+                return CreatedAtAction(nameof(Login), result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

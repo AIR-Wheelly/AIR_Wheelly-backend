@@ -25,5 +25,17 @@ namespace AIR_Wheelly_BLL.Services {
 
             return user;
         }
+
+        public async Task<User?> LoginUser(LoginUserDto dto)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
+            if (user != null && user.Password == dto.Password)
+            {
+                user.Password = null;
+                return user;
+            }
+
+            return null;
+        }
     }
 }
