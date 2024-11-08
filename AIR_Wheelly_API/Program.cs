@@ -1,4 +1,8 @@
+using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_DAL;
 using AIR_Wheelly_DAL.Data;
+using AIR_Wheelly_DAL.Models;
+using AIR_Wheelly_DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 var app = builder.Build();
 
