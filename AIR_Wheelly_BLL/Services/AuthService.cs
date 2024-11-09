@@ -1,13 +1,20 @@
-﻿using AIR_Wheelly_Common.DTO;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AIR_Wheelly_BLL.Services {
     public class AuthService {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IUnitOfWork unitOfWork) {
+        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration) {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         public async Task<User> RegisterUser(RegisterUserDTO dto) {
@@ -24,6 +31,34 @@ namespace AIR_Wheelly_BLL.Services {
             user.Password = null;
 
             return user;
+        }
+
+        public async Task<User?> LoginUser(LoginUserDto dto)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
+            if (user != null && user.Password == dto.Password)
+            {
+                user.Password = null;
+                return user;
+            }
+
+            return null;
+        }
+
+        public string GenerateJwtToken(int Id)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["JWT:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", Id.ToString()) }),
+                Expires = DateTime.Now.AddDays(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = handler.CreateToken(tokenDescriptor);
+            return handler.WriteToken(token);
+
         }
     }
 }

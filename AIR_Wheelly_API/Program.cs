@@ -1,9 +1,12 @@
+using System.Text;
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL;
 using AIR_Wheelly_DAL.Data;
 using AIR_Wheelly_DAL.Models;
 using AIR_Wheelly_DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +24,26 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Services
 builder.Services.AddScoped<AuthService>();
-
-
+//JWT
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Key"]))
+        };
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
