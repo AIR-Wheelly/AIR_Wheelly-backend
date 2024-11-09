@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\AIR_Wheelly_Common\AIR_Wheelly_Common.csproj" />
+    <ProjectReference Include="..\AIR_Wheelly_BLL\AIR_Wheelly_BLL.csproj" />
   </ItemGroup>
 
 </Project>
