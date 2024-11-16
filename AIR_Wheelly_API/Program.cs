@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddRepositories();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddHelpers();
 builder.Services.AddServices();
 
 //JWT
