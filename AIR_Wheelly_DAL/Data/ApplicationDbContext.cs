@@ -31,7 +31,7 @@ public class ApplicationDbContext : DbContext
             en.Property(user => user.LastName).IsRequired().HasMaxLength(50);
             en.Property(user => user.Email).IsRequired().HasMaxLength(100);
             en.HasIndex(user => user.Email).IsUnique();
-            en.Property(user => user.Password).IsRequired().HasMaxLength(20);
+            en.Property(user => user.Password).IsRequired();
         });
     }
 
