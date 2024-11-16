@@ -20,6 +20,10 @@ namespace AIR_Wheelly_BLL.Services {
         }
 
         public async Task<User> RegisterUser(RegisterUserDTO dto) {
+            bool exists = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email) != null;
+
+            if (exists) throw new ArgumentException("Email is already taken!");
+
             User user = new() {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
