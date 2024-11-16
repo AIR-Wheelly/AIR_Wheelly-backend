@@ -22,7 +22,6 @@ public class User
     public string Email { get; set; }
 
     [Required]
-    [MaxLength(100)]
     public string Password { get; set; }
 
     [Required]
