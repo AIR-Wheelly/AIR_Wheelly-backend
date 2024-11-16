@@ -11,19 +11,22 @@ namespace AIR_Wheelly_BLL.Services {
     public class AuthService {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
+        private readonly IPasswordHelper _passwordHelper;
 
-        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration) {
+        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHelper passwordHelper) {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
+            _passwordHelper = passwordHelper;
         }
 
         public async Task<User> RegisterUser(RegisterUserDTO dto) {
             User user = new() {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
-                Email = dto.Email,
-                Password = dto.Password//HashPassword(dto.Password)
+                Email = dto.Email
             };
+
+            user.Password = _passwordHelper.HashPassword(user, dto.Password);
 
             await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.CompleteAsync();
@@ -36,7 +39,7 @@ namespace AIR_Wheelly_BLL.Services {
         public async Task<User?> LoginUser(LoginUserDto dto)
         {
             var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
-            if (user != null && user.Password == dto.Password)
+            if (user != null && _passwordHelper.VerifyPassword(user, user.Password, dto.Password))
             {
                 user.Password = null;
                 return user;
