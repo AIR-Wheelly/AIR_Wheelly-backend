@@ -50,5 +50,28 @@ namespace AIR_Wheelly_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile([FromHeader] string authorization)
+        {
+            try
+            {
+                var jwtToken = authorization?.Replace("Bearer ", "");
+                if (string.IsNullOrEmpty(jwtToken))
+                {
+                    return Unauthorized();
+                }
+                var user = await _authService.GetUserByJwt(jwtToken);
+                if (user == null)
+                {
+                    return Unauthorized("Invalid token");
+                }
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

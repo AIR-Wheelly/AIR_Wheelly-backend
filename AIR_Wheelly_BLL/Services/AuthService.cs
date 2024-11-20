@@ -4,6 +4,7 @@ using System.Text;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -66,6 +67,16 @@ namespace AIR_Wheelly_BLL.Services {
             var token = handler.CreateToken(tokenDescriptor);
             return handler.WriteToken(token);
 
+        }
+
+        public async Task<User?> GetUserByJwt(string jwtToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
+            var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "id") ?? throw new ArgumentNullException("No id claim found");
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim.Value);
+            user.Password = null;
+            return user;
         }
     }
 }
