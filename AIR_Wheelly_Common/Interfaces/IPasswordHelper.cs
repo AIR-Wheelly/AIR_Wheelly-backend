@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AIR_Wheelly_Common.Interfaces {
-    public interface IUserRepository: IRepository<User> {
-        Task<User> GetUserByEmailAsync(string email);
-        Task<User> GetUserByIdAsync(string id);
-
+    public interface IPasswordHelper {
+        string HashPassword(User user, string password);
+        bool VerifyPassword(User user, string hashedPassword, string password);
     }
 }

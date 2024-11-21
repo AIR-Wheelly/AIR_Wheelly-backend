@@ -16,5 +16,10 @@ namespace AIR_Wheelly_DAL.Repositories {
         {
             return await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<User?> GetUserByIdAsync(string id)
+        {
+            return await _context.Set<User>().FirstOrDefaultAsync(u => u.Id.ToString() == id);
+        }
     }
 }

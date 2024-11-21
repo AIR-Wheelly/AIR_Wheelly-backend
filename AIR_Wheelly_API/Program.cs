@@ -1,4 +1,5 @@
 using System.Text;
+using AIR_Wheelly_API.Extentions;
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL;
@@ -17,13 +18,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>();
-//Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddRepositories();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddHelpers();
+builder.Services.AddServices();
 
-//Services
-builder.Services.AddScoped<AuthService>();
 //JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(options =>
