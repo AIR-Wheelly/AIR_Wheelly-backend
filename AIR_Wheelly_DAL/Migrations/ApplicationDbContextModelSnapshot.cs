@@ -22,7 +22,115 @@ namespace AIR_Wheelly_DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AIR_Wheelly_DAL.Models.User", b =>
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("FuelType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("NumberOfKilometers")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("RentalPriceType")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("YearOfProduction")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
+
+                    b.ToTable("CarListings");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListingPicture", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CarListingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarListingId");
+
+                    b.ToTable("CarListingPictures");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Manafacturer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manafacturers");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Model", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ManafacturerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManafacturerId");
+
+                    b.ToTable("Models");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,6 +166,54 @@ namespace AIR_Wheelly_DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListing", b =>
+                {
+                    b.HasOne("AIR_Wheelly_Common.Models.Model", "Model")
+                        .WithMany("CarListings")
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Model");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListingPicture", b =>
+                {
+                    b.HasOne("AIR_Wheelly_Common.Models.CarListing", "CarListing")
+                        .WithMany("CarListingPictures")
+                        .HasForeignKey("CarListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarListing");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Model", b =>
+                {
+                    b.HasOne("AIR_Wheelly_Common.Models.Manafacturer", "Manafacturer")
+                        .WithMany("Models")
+                        .HasForeignKey("ManafacturerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manafacturer");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListing", b =>
+                {
+                    b.Navigation("CarListingPictures");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Manafacturer", b =>
+                {
+                    b.Navigation("Models");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Model", b =>
+                {
+                    b.Navigation("CarListings");
                 });
 #pragma warning restore 612, 618
         }
