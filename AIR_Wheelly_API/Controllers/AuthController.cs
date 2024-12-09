@@ -1,5 +1,6 @@
 ﻿using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers
@@ -78,7 +79,14 @@ namespace AIR_Wheelly_API.Controllers
         {
             if (dto.Token == string.Empty)
                 return BadRequest();
-            return Ok();
+
+            User? user = await _authService.OAuthLogin(dto.Token);
+
+            if (user is null)
+                return BadRequest();
+
+            var token = _authService.GenerateJwtToken(user.Id);
+            return Ok(new { Token = token });
         }
     }
 }
