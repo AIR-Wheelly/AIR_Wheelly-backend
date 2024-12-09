@@ -26,4 +26,52 @@ ALTER TABLE "Users" ALTER COLUMN "Password" TYPE text;
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20241116133307_remove-password-length-limit', '9.0.0-rc.2.24474.1');
 
+CREATE TABLE "Manafacturers" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(50) NOT NULL,
+    CONSTRAINT "PK_Manafacturers" PRIMARY KEY ("Id")
+);
+
+CREATE TABLE "Models" (
+    "Id" uuid NOT NULL,
+    "ManafacturerId" uuid NOT NULL,
+    "Name" character varying(50) NOT NULL,
+    CONSTRAINT "PK_Models" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Models_Manafacturers_ManafacturerId" FOREIGN KEY ("ManafacturerId") REFERENCES "Manafacturers" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "CarListings" (
+    "Id" uuid NOT NULL,
+    "ModelId" uuid NOT NULL,
+    "YearOfProduction" integer NOT NULL,
+    "NumberOfSeats" integer NOT NULL,
+    "FuelType" text NOT NULL,
+    "RentalPriceType" double precision NOT NULL,
+    "Location" text NOT NULL,
+    "NumberOfKilometers" double precision NOT NULL,
+    "RegistrationNumber" text NOT NULL,
+    "Description" character varying(10000) NOT NULL,
+    "IsActive" boolean NOT NULL,
+    "UserId" uuid NOT NULL,
+    CONSTRAINT "PK_CarListings" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_CarListings_Models_ModelId" FOREIGN KEY ("ModelId") REFERENCES "Models" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "CarListingPictures" (
+    "Id" uuid NOT NULL,
+    "CarListingId" uuid NOT NULL,
+    "Image" text NOT NULL,
+    CONSTRAINT "PK_CarListingPictures" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_CarListingPictures_CarListings_CarListingId" FOREIGN KEY ("CarListingId") REFERENCES "CarListings" ("Id") ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_CarListingPictures_CarListingId" ON "CarListingPictures" ("CarListingId");
+
+CREATE INDEX "IX_CarListings_ModelId" ON "CarListings" ("ModelId");
+
+CREATE INDEX "IX_Models_ManafacturerId" ON "Models" ("ManafacturerId");
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20241205225649_car-listing-database', '9.0.0-rc.2.24474.1');
+
 COMMIT;

@@ -1,6 +1,5 @@
 ﻿using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers
