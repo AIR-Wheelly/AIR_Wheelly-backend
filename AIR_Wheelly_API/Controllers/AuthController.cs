@@ -1,5 +1,5 @@
-﻿using AIR_Wheelly_BLL.Services;
-using AIR_Wheelly_Common.DTO;
+﻿using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +9,9 @@ namespace AIR_Wheelly_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

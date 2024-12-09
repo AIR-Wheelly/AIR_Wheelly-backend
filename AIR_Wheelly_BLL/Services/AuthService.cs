@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AIR_Wheelly_BLL.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
