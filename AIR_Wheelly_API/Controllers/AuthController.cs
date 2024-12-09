@@ -72,5 +72,13 @@ namespace AIR_Wheelly_API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TokenLogin(OAuthLoginDTO dto)
+        {
+            if (dto.Token == string.Empty)
+                return BadRequest();
+            return Ok();
+        }
     }
 }
