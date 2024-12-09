@@ -1,13 +1,7 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL.Data;
-using AIR_Wheelly_DAL.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AIR_Wheelly_DAL {
     public class UnitOfWork : IUnitOfWork, IDisposable {

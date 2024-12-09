@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AIR_Wheelly_DAL.Models;
+namespace AIR_Wheelly_Common.Models;
 
 public class User
 {

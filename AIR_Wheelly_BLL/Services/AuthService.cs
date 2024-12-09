@@ -3,8 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
-using AIR_Wheelly_DAL.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
+using AIR_Wheelly_Common.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -68,7 +67,6 @@ namespace AIR_Wheelly_BLL.Services {
             return handler.WriteToken(token);
 
         }
-
         public async Task<User?> GetUserByJwt(string jwtToken)
         {
             var handler = new JwtSecurityTokenHandler();

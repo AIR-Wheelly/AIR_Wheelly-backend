@@ -1,11 +1,8 @@
 using System.Text;
 using AIR_Wheelly_API.Extentions;
-using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_DAL;
 using AIR_Wheelly_DAL.Data;
-using AIR_Wheelly_DAL.Models;
-using AIR_Wheelly_DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
