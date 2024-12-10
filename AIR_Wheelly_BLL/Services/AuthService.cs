@@ -1,30 +1,40 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using AIR_Wheelly_BLL.Helpers;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AIR_Wheelly_BLL.Services {
-    public class AuthService {
+namespace AIR_Wheelly_BLL.Services
+{
+    public class AuthService : IAuthService
+    {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly IPasswordHelper _passwordHelper;
 
-        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHelper passwordHelper) {
+        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHelper passwordHelper)
+        {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _passwordHelper = passwordHelper;
         }
 
-        public async Task<User> RegisterUser(RegisterUserDTO dto) {
+        public async Task<User> RegisterUser(RegisterUserDTO dto)
+        {
             bool exists = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email) != null;
 
-            if (exists) throw new ArgumentException("Email is already taken!");
+            if (exists)
+                throw new ArgumentException("Email is already taken!");
 
-            User user = new() {
+            User user = new()
+            {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email
@@ -75,6 +85,38 @@ namespace AIR_Wheelly_BLL.Services {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim.Value);
             user.Password = null;
             return user;
+        }
+
+        public async Task<User?> OAuthLogin(string token)
+        {
+            var oauthUser = await OAuthHelper.ValidateToken(token);
+            if (oauthUser is null)
+                return null;
+
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(oauthUser.email);
+
+            if (user == null)
+            {
+                RegisterUserDTO dto = new()
+                {
+                    FirstName = oauthUser.given_name,
+                    LastName = oauthUser.family_name,
+                    Email = oauthUser.email,
+                    Password = Guid.NewGuid().ToString()
+                };
+                try
+                {
+                    user = await RegisterUser(dto);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            user.Password = null;
+            return user;
+
         }
     }
 }

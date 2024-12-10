@@ -1,5 +1,6 @@
-﻿using AIR_Wheelly_BLL.Services;
-using AIR_Wheelly_Common.DTO;
+﻿using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers
@@ -8,9 +9,9 @@ namespace AIR_Wheelly_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
@@ -71,6 +72,21 @@ namespace AIR_Wheelly_API.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TokenLogin(OAuthLoginDTO dto)
+        {
+            if (dto.Token == string.Empty)
+                return BadRequest();
+
+            User? user = await _authService.OAuthLogin(dto.Token);
+
+            if (user is null)
+                return BadRequest();
+
+            var token = _authService.GenerateJwtToken(user.Id);
+            return Ok(new { Token = token });
         }
     }
 }
