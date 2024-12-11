@@ -1,4 +1,5 @@
 using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
@@ -29,20 +30,9 @@ public class CarService : ICarService
             Name = m.Name,
         }).ToListAsync();
     }
-    private readonly List<string> _fuelTypes =
-    [
-        "Petrol",
-        "Diesel",
-        "Electric",
-        "Hybrid-Benzine",
-        "Hybrid-Dizel",
-        "Benzine",
-        "Bio-Dizel"
-    ];
-
     public IEnumerable<string> GetFuelTypes()
     {
-        return _fuelTypes;
+        return Enum.GetNames(typeof(FuelTypes)).ToList();
     }
 
     public async Task<Guid> CreateCarListingAsync(CarListingDTO carListingDto)
