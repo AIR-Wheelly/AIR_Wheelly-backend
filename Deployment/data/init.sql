@@ -71,6 +71,8 @@ CREATE INDEX "IX_CarListings_ModelId" ON "CarListings" ("ModelId");
 
 CREATE INDEX "IX_Models_ManafacturerId" ON "Models" ("ManafacturerId");
 
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20241205225649_car-listing-database', '9.0.0-rc.2.24474.1');
 
 ALTER TABLE "CarListings" DROP COLUMN "Location";
 
@@ -91,8 +93,23 @@ ALTER TABLE "CarListings" ADD CONSTRAINT "FK_CarListings_Location_LocationId" FO
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20241211124947_location-db-update', '9.0.0-rc.2.24474.1');
 
+ALTER TABLE "CarListings" DROP CONSTRAINT "FK_CarListings_Location_LocationId";
+
+ALTER TABLE "Location" DROP CONSTRAINT "PK_Location";
+
+ALTER TABLE "Location" RENAME TO "Locations";
+
+ALTER TABLE "Locations" ADD "CreatedAt" timestamp without time zone NOT NULL DEFAULT TIMESTAMP '-infinity';
+
+ALTER TABLE "Locations" ADD "UpdatedAt" timestamp without time zone NOT NULL DEFAULT TIMESTAMP '-infinity';
+
+ALTER TABLE "Locations" ADD CONSTRAINT "PK_Locations" PRIMARY KEY ("LocationId");
+
+ALTER TABLE "CarListings" ADD CONSTRAINT "FK_CarListings_Locations_LocationId" FOREIGN KEY ("LocationId") REFERENCES "Locations" ("LocationId") ON DELETE CASCADE;
+
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20241205225649_car-listing-database', '9.0.0-rc.2.24474.1');
+VALUES ('20241211175815_AddTimestampToLocation', '9.0.0-rc.2.24474.1');
+
 INSERT INTO "Manafacturers" ("Id", "Name")
 VALUES
     (gen_random_uuid(), 'Toyota'),

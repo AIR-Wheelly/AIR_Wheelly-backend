@@ -19,6 +19,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Model> Models { get; set; }
     public DbSet<CarListing> CarListings { get; set; }
     public DbSet<CarListingPicture> CarListingPictures { get; set; }
+    public DbSet<Location> Locations { get; set; }
     
     
 
@@ -61,6 +62,20 @@ public class ApplicationDbContext : DbContext
             en.HasKey(picture => picture.Id);
             en.HasOne(picture => picture.CarListing).WithMany(picture => picture.CarListingPictures).HasForeignKey(picture => picture.CarListingId);
         });
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries().Where(e => e is { Entity: Location, State: EntityState.Added or EntityState.Modified });
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                ((Location)entry.Entity).CreatedAt = DateTime.UtcNow;
+            }
+            ((Location)entry.Entity).UpdatedAt = DateTime.UtcNow;
+        }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     
