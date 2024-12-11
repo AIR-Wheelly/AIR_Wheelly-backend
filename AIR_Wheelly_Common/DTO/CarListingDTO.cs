@@ -11,4 +11,5 @@ public class CarListingDTO
     public double NumberOfKilometers { get; set; }
     public string RegistrationNumber { get; set; }
     public string Description { get; set; }
+    public Guid UserId { get; set; }
 }
