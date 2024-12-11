@@ -410,3 +410,4 @@ FodyWeavers.xsd
 /.idea/.idea.AIR_Whelly_API/.idea/workspace.xml
 /.idea/.idea.AIR_Wheelly_API/.idea/dataSources.xml
 /AIR_Wheelly_DAL/Migrations/20241205225649_car-listing-database.Designer.cs
+/git config user.name = dbracic21@student.foi.hr
