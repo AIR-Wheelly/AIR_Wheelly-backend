@@ -71,6 +71,26 @@ CREATE INDEX "IX_CarListings_ModelId" ON "CarListings" ("ModelId");
 
 CREATE INDEX "IX_Models_ManafacturerId" ON "Models" ("ManafacturerId");
 
+
+ALTER TABLE "CarListings" DROP COLUMN "Location";
+
+ALTER TABLE "CarListings" ADD "LocationId" uuid NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+
+CREATE TABLE "Location" (
+    "LocationId" uuid NOT NULL,
+    "Latitude" double precision NOT NULL,
+    "Longitude" double precision NOT NULL,
+    "Adress" text NOT NULL,
+    CONSTRAINT "PK_Location" PRIMARY KEY ("LocationId")
+);
+
+CREATE INDEX "IX_CarListings_LocationId" ON "CarListings" ("LocationId");
+
+ALTER TABLE "CarListings" ADD CONSTRAINT "FK_CarListings_Location_LocationId" FOREIGN KEY ("LocationId") REFERENCES "Location" ("LocationId") ON DELETE CASCADE;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20241211124947_location-db-update', '9.0.0-rc.2.24474.1');
+
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20241205225649_car-listing-database', '9.0.0-rc.2.24474.1');
 INSERT INTO "Manafacturers" ("Id", "Name")

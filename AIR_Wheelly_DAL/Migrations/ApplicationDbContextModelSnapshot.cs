@@ -40,9 +40,8 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uuid");
@@ -68,6 +67,8 @@ namespace AIR_Wheelly_DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.HasIndex("ModelId");
 
                     b.ToTable("CarListings");
@@ -91,6 +92,27 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.HasIndex("CarListingId");
 
                     b.ToTable("CarListingPictures");
+                });
+
+            modelBuilder.Entity("AIR_Wheelly_Common.Models.Location", b =>
+                {
+                    b.Property<Guid>("LocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("LocationId");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("AIR_Wheelly_Common.Models.Manafacturer", b =>
@@ -170,11 +192,19 @@ namespace AIR_Wheelly_DAL.Migrations
 
             modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListing", b =>
                 {
+                    b.HasOne("AIR_Wheelly_Common.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AIR_Wheelly_Common.Models.Model", "Model")
                         .WithMany("CarListings")
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Location");
 
                     b.Navigation("Model");
                 });

@@ -8,7 +8,8 @@ public class CarListing
     public int NumberOfSeats { get; set; }
     public string FuelType { get; set; }
     public double RentalPriceType {get; set;}
-    public string Location { get; set; }
+    public Guid LocationId { get; set; }
+    public Location Location { get; set; }
     public double NumberOfKilometers { get; set; }
     public string RegistrationNumber { get; set; }
     public string Description {get; set;}
