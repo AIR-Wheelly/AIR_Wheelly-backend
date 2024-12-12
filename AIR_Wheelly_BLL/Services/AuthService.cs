@@ -39,7 +39,7 @@ namespace AIR_Wheelly_BLL.Services
                 LastName = dto.LastName,
                 Email = dto.Email
             };
-
+            user.Id = Guid.NewGuid();
             user.Password = PasswordHelper.HashPassword(user, dto.Password);
 
             await _unitOfWork.UserRepository.AddAsync(user);

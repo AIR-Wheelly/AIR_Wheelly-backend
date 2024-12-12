@@ -38,7 +38,7 @@ public class JwtHelper
         return userIdClaims.Value;
     }
 
-    public string GenerateJwtToken(int Id)
+    public string GenerateJwtToken(Guid Id)
     {
         var handler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtKey);
