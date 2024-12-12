@@ -6,10 +6,9 @@ namespace AIR_Wheelly_Common.Interfaces
     public interface IAuthService
     {
         Task<User> RegisterUser(RegisterUserDTO dto);
-        Task<User?> LoginUser(LoginUserDto dto);
-        string GenerateJwtToken(int Id);
+        Task<string?> LoginUser(LoginUserDto dto);
         Task<User?> GetUserByJwt(string jwtToken);
-        Task<User?> OAuthLogin(string token);
+        Task<string?> OAuthLogin(string token);
         Task<User?> UpdateProfileAsync(UpdateProfileDTO dto, string jwtToken);
     }
 }

@@ -16,7 +16,7 @@ namespace AIR_Wheelly_API.Extentions {
         }
 
         public static void AddHelpers(this IServiceCollection services) {
-            services.AddScoped<IPasswordHelper, PasswordHelper>();
+            services.AddSingleton<JwtHelper>();
         }
     }
 }
