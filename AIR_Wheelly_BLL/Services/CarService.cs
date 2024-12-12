@@ -63,5 +63,11 @@ public class CarService : ICarService
         return carListings;
     }
 
+    public async Task<IEnumerable<CarListing>> GetCarListingByIdAsync(Guid id)
+    {
+        var carListings = await _context.CarListings.Where(c => c.Id == id).Include(c => c.Model).ThenInclude(m => m.Manafacturer).Where(cl => cl.IsActive).ToListAsync();
+        return carListings;
+    }
+
     
 }

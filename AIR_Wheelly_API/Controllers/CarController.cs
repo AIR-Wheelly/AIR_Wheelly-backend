@@ -55,7 +55,7 @@ public class CarController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCarListingsById(Guid id)
     {
-        var carListing = await _carService.GetCarListingsAsync();
+        var carListing = await _carService.GetCarListingByIdAsync(id);
         return Ok(carListing);
     }
     
