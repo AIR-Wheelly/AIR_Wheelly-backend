@@ -19,6 +19,7 @@ namespace AIR_Wheelly_BLL.Services
         private readonly IConfiguration _configuration;
         private readonly IPasswordHelper _passwordHelper;
 
+
         public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHelper passwordHelper)
         {
             _unitOfWork = unitOfWork;
@@ -79,10 +80,8 @@ namespace AIR_Wheelly_BLL.Services
         }
         public async Task<User?> GetUserByJwt(string jwtToken)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
-            var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "id") ?? throw new ArgumentNullException("No id claim found");
-            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim.Value);
+            var userId = JwtHelper.GetUserIdFromJwt(jwtToken);
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
             user.Password = null;
             return user;
         }
@@ -118,5 +117,44 @@ namespace AIR_Wheelly_BLL.Services
             return user;
 
         }
+
+        public async Task<User?> UpdateProfileAsync(UpdateProfileDTO dto, string jwtToken)
+        {
+            var userId = JwtHelper.GetUserIdFromJwt(jwtToken);
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (user == null )
+            {
+                throw new KeyNotFoundException();
+            }
+
+            if (!string.IsNullOrEmpty(dto.FirstName))
+            {
+                user.FirstName = dto.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(dto.LastName))
+            {
+                user.LastName = dto.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(dto.Email))
+            {
+                user.Email = dto.Email;
+            }
+
+            if (!string.IsNullOrEmpty(dto.NewPassword))
+            {
+                if (string.IsNullOrEmpty(dto.CurrentPassword) || !_passwordHelper.VerifyPassword(user, user.Password,dto.CurrentPassword))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+                user.Password = _passwordHelper.HashPassword(user, dto.NewPassword);
+            }
+
+            await _unitOfWork.UserRepository.UpdateUserAsync(user);
+            await _unitOfWork.CompleteAsync();
+            return user;
+        }
+
     }
 }
