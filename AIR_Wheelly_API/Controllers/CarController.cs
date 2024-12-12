@@ -2,11 +2,13 @@ using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers;
 [Route("api/[controller]/[action]")]
 [ApiController]
+[Authorize]
 public class CarController : ControllerBase
 {
     private readonly ICarService _carService;
