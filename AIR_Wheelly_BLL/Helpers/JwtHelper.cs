@@ -10,9 +10,15 @@ namespace AIR_Wheelly_BLL.Helpers;
 public class JwtHelper
 {
     private readonly string _jwtKey;
+    private readonly string _audience;
+    private readonly string _issuer;
     public JwtHelper(IConfiguration configuration)
     {
         _jwtKey = configuration["JWT:Key"] ?? throw new Exception("Missing JWT configuration");
+        _audience = configuration["JWT:Audience"] ?? throw new Exception("Missing JWT configuration");
+        ;
+        _issuer = configuration["JWT:Issuer"] ?? throw new Exception("Missing JWT configuration");
+        ;
     }
 
     public string GetUserIdFromJwt(string jwtToken)
@@ -38,6 +44,8 @@ public class JwtHelper
         var key = Encoding.ASCII.GetBytes(_jwtKey);
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
+            Issuer = _issuer,
+            Audience = _audience,
             Subject = new ClaimsIdentity(new[] { new Claim("id", Id.ToString()) }),
             Expires = DateTime.Now.AddDays(30),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
