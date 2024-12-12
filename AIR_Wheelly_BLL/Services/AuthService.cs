@@ -19,6 +19,7 @@ namespace AIR_Wheelly_BLL.Services
         private readonly IConfiguration _configuration;
         private readonly IPasswordHelper _passwordHelper;
 
+
         public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHelper passwordHelper)
         {
             _unitOfWork = unitOfWork;
@@ -79,10 +80,8 @@ namespace AIR_Wheelly_BLL.Services
         }
         public async Task<User?> GetUserByJwt(string jwtToken)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
-            var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "id") ?? throw new ArgumentNullException("No id claim found");
-            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim.Value);
+            var userId = JwtHelper.GetUserIdFromJwt(jwtToken);
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
             user.Password = null;
             return user;
         }
@@ -121,10 +120,8 @@ namespace AIR_Wheelly_BLL.Services
 
         public async Task<User?> UpdateProfileAsync(UpdateProfileDTO dto, string jwtToken)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
-            var userIdClaim = token?.Claims.FirstOrDefault(c =>c.Type == "id")?.Value ?? throw new ArgumentNullException("No id claim found");
-            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim);
+            var userId = JwtHelper.GetUserIdFromJwt(jwtToken);
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
             if (user == null )
             {
                 throw new KeyNotFoundException();
