@@ -63,11 +63,34 @@ public class CarService : ICarService
         return carListings;
     }
 
-    public async Task<IEnumerable<CarListing>> GetCarListingByIdAsync(Guid id)
+    public async Task<CarListing?> GetCarListingByIdAsync(Guid id, bool includeDetails = true)
     {
-        var carListings = await _context.CarListings.Where(c => c.Id == id).Include(c => c.Model).ThenInclude(m => m.Manafacturer).Where(cl => cl.IsActive).ToListAsync();
-        return carListings;
+        var query = _context.CarListings.AsQueryable();
+
+        if (includeDetails)
+            query = query.Include(c => c.Model)
+                         .ThenInclude(m => m.Manafacturer)
+                         .Where(cl => cl.IsActive);
+
+        var carListing = await query.FirstOrDefaultAsync(c => c.Id == id);
+
+        return carListing;
     }
 
+    public async Task UploadCarListingPictures(IEnumerable<byte[]> files,  Guid listingId)
+    {
+        var listing = await  GetCarListingByIdAsync(listingId, false);
+        if (listing is null)
+            throw new ArgumentNullException(nameof(CarListing));
+
+        var listingPicutres = files.Select(f => new CarListingPicture()
+        {
+            CarListingId = listingId,
+            Image = Convert.ToBase64String(f)
+        });
+
+        await _context.CarListingPictures.AddRangeAsync(listingPicutres);
+        await _context.SaveChangesAsync();
+    }
     
 }
