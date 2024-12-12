@@ -10,5 +10,6 @@ namespace AIR_Wheelly_Common.Interfaces
         string GenerateJwtToken(int Id);
         Task<User?> GetUserByJwt(string jwtToken);
         Task<User?> OAuthLogin(string token);
+        Task<User?> UpdateProfileAsync(UpdateProfileDTO dto, string jwtToken);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers
@@ -43,7 +44,7 @@ namespace AIR_Wheelly_API.Controllers
 
                 var token = _authService.GenerateJwtToken(user.Id);
                 return Ok(new { Token = token });
-                
+
             }
             catch (Exception ex)
             {
@@ -61,11 +62,13 @@ namespace AIR_Wheelly_API.Controllers
                 {
                     return Unauthorized();
                 }
+
                 var user = await _authService.GetUserByJwt(jwtToken);
                 if (user == null)
                 {
                     return Unauthorized("Invalid token");
                 }
+
                 return Ok(user);
             }
             catch (Exception e)
@@ -87,6 +90,25 @@ namespace AIR_Wheelly_API.Controllers
 
             var token = _authService.GenerateJwtToken(user.Id);
             return Ok(new { Token = token });
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfile([FromHeader] string authorization,
+            [FromBody] UpdateProfileDTO dto)
+        {
+            try
+            {
+                var jwtToken = authorization?.Replace("Bearer ", "");
+                if (string.IsNullOrEmpty(jwtToken))
+                {
+                    return Unauthorized();
+                }
+                var updatedUser = await _authService.UpdateProfileAsync(dto,jwtToken);
+                return Ok(new {message = "Updated", user = updatedUser});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
