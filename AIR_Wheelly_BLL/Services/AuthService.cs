@@ -118,5 +118,46 @@ namespace AIR_Wheelly_BLL.Services
             return user;
 
         }
+
+        public async Task<User?> UpdateProfileAsync(UpdateProfileDTO dto, string jwtToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
+            var userIdClaim = token?.Claims.FirstOrDefault(c =>c.Type == "id")?.Value ?? throw new ArgumentNullException("No id claim found");
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userIdClaim);
+            if (user == null )
+            {
+                throw new KeyNotFoundException();
+            }
+
+            if (!string.IsNullOrEmpty(dto.FirstName))
+            {
+                user.FirstName = dto.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(dto.LastName))
+            {
+                user.LastName = dto.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(dto.Email))
+            {
+                user.Email = dto.Email;
+            }
+
+            if (!string.IsNullOrEmpty(dto.NewPassword))
+            {
+                if (string.IsNullOrEmpty(dto.CurrentPassword) || !_passwordHelper.VerifyPassword(user, user.Password,dto.CurrentPassword))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+                user.Password = _passwordHelper.HashPassword(user, dto.NewPassword);
+            }
+
+            await _unitOfWork.UserRepository.UpdateUserAsync(user);
+            await _unitOfWork.CompleteAsync();
+            return user;
+        }
+
     }
 }
