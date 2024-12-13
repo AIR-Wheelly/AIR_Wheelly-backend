@@ -1,4 +1,4 @@
-using AIR_Wheelly_DAL.Models;
+using AIR_Wheelly_Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -15,6 +15,13 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Manafacturer> Manafacturers { get; set; }
+    public DbSet<Model> Models { get; set; }
+    public DbSet<CarListing> CarListings { get; set; }
+    public DbSet<CarListingPicture> CarListingPictures { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
@@ -33,6 +40,42 @@ public class ApplicationDbContext : DbContext
             en.HasIndex(user => user.Email).IsUnique();
             en.Property(user => user.Password).IsRequired();
         });
+        modelBuilder.Entity<Manafacturer>(en =>
+        {
+            en.HasKey(manafacturer => manafacturer.Id);
+            en.Property(manafacturer => manafacturer.Name).IsRequired().HasMaxLength(50);
+        });
+        modelBuilder.Entity<Model>(en =>
+        {
+            en.HasKey(model => model.Id);
+            en.Property(model => model.Name).IsRequired().HasMaxLength(50);
+            en.HasOne(model => model.Manafacturer).WithMany(model => model.Models).HasForeignKey(model => model.ManafacturerId);
+        });
+        modelBuilder.Entity<CarListing>(en =>
+        {
+            en.HasKey(carListing => carListing.Id);
+            en.Property(carListing => carListing.Description).IsRequired().HasMaxLength(10000);
+            en.HasOne(carListing => carListing.Model).WithMany(carListing => carListing.CarListings).HasForeignKey(carListing => carListing.ModelId);
+        });
+        modelBuilder.Entity<CarListingPicture>(en =>
+        {
+            en.HasKey(picture => picture.Id);
+            en.HasOne(picture => picture.CarListing).WithMany(picture => picture.CarListingPictures).HasForeignKey(picture => picture.CarListingId);
+        });
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries().Where(e => e is { Entity: Location, State: EntityState.Added or EntityState.Modified });
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                ((Location)entry.Entity).CreatedAt = DateTime.UtcNow;
+            }
+            ((Location)entry.Entity).UpdatedAt = DateTime.UtcNow;
+        }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     

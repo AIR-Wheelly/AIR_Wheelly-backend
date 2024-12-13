@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  postgres-db:
+  wheelly-db:
     image: postgres:latest
-    container_name: postgres_db
+    container_name: wheelly-db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: P@55w0rd
@@ -22,7 +22,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres-db
+      - wheelly-db
       
 volumes:
   pgdata:

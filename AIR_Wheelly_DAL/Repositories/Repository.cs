@@ -1,4 +1,4 @@
-﻿using AIR_Wheelly_Common.Interfaces;
+﻿using AIR_Wheelly_Common.Interfaces.Repository;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIR_Wheelly_DAL.Repositories {
+namespace AIR_Wheelly_DAL.Repositories
+{
     public class Repository<T> : IRepository<T> where T : class {
         protected readonly ApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -21,12 +22,17 @@ namespace AIR_Wheelly_DAL.Repositories {
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id) {
+        public async Task<T?> GetByIdAsync(Guid id) {
             return await _dbSet.FindAsync(id);
         }
 
         public async Task AddAsync(T entity) {
             await _dbSet.AddAsync(entity);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
         }
 
         public void Update(T entity) {

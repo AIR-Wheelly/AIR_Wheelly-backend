@@ -1,14 +1,10 @@
-﻿using AIR_Wheelly_Common.Interfaces;
-using AIR_Wheelly_DAL.Data;
-using AIR_Wheelly_DAL.Models;
+﻿using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AIR_Wheelly_Common.Models;
+using AIR_Wheelly_Common.Interfaces.Repository;
 
-namespace AIR_Wheelly_DAL.Repositories {
+namespace AIR_Wheelly_DAL.Repositories
+{
     public class UserRepository : Repository<User>, IUserRepository {
         public UserRepository(ApplicationDbContext context) : base(context) { }
         
@@ -20,6 +16,12 @@ namespace AIR_Wheelly_DAL.Repositories {
         public async Task<User?> GetUserByIdAsync(string id)
         {
             return await _context.Set<User>().FirstOrDefaultAsync(u => u.Id.ToString() == id);
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
     }
 }
