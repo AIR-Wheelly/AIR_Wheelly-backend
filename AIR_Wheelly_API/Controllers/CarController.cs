@@ -19,33 +19,37 @@ public class CarController : ControllerBase
     [HttpGet]
     public IActionResult GetFuelType()
     {
-        return Ok(_carService.GetFuelTypes());
+        var fuelTypes = _carService.GetFuelTypes();
+        return Ok(new { result = fuelTypes });
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllManafacturer()
     {
         var manafacturers = await _carService.GetAllManafacturersAsync();
-        if (manafacturers == null) throw new ArgumentNullException(nameof(manafacturers));
-        return Ok(manafacturers);
+        if (manafacturers == null)
+            throw new ArgumentNullException(nameof(manafacturers));
+        return Ok(new { result = manafacturers });
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetModelsById(Guid id)
     {
         var models = await _carService.GetModelsByManafacturerIdAsync(id);
-        if (models == null) throw new ArgumentNullException(nameof(models));
-        return Ok(models);
+        if (models == null)
+            throw new ArgumentNullException(nameof(models));
+        return Ok(new { result = models });
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateCarListing([FromBody] CarListingDTO carListing)
     {
-        if (!ModelState.IsValid) return BadRequest("Invalid data provided");
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid data provided");
         try
         {
             var newListingId = await _carService.CreateCarListingAsync(carListing);
-            return CreatedAtAction(nameof(GetCarListingById), new { id = newListingId }, new{id = newListingId});
+            return CreatedAtAction(nameof(GetCarListingById), new { id = newListingId }, new { id = newListingId });
 
         }
         catch (Exception ex)
@@ -58,7 +62,7 @@ public class CarController : ControllerBase
     public async Task<IActionResult> CarListings()
     {
         var carListings = await _carService.GetCarListingsAsync();
-        return Ok(carListings);
+        return Ok(new { result = carListings });
     }
 
     [HttpGet("{id}")]
@@ -97,6 +101,6 @@ public class CarController : ControllerBase
         }
 
     }
-    
-    
+
+
 }
