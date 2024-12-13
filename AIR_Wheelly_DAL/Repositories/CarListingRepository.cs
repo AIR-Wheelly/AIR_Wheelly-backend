@@ -18,14 +18,17 @@ namespace AIR_Wheelly_DAL.Repositories
 
         public async Task<IEnumerable<CarListing>> GetCarListingsWithDetailsAsync()
         {
-            return await _dbSet.Include(c => c.Model).ThenInclude(m => m.Manafacturer)
-            .Where(cl => cl.IsActive).ToListAsync();
+            return await _dbSet.Include(c => c.Model)
+                .ThenInclude(m => m.Manafacturer)
+                .Where(cl => cl.IsActive)
+                .ToListAsync();
         }
 
         public async Task<CarListing?> GetCarListingWithDetailsAsync(Guid id)
         {
             return await _dbSet.Include(c => c.Model)
                          .ThenInclude(m => m.Manafacturer)
+                         .Include(c => c.CarListingPictures)
                          .Where(cl => cl.IsActive)
                          .FirstOrDefaultAsync(c => c.Id == id);
         }
