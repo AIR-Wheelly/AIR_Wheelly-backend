@@ -1,4 +1,5 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using AIR_Wheelly_DAL.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,10 @@ namespace AIR_Wheelly_DAL {
 
         public IUserRepository UserRepository => _serviceProvider.GetService<IUserRepository>();
         public ILocationRepository LocationRepository => _serviceProvider.GetService<ILocationRepository>();
+        public ICarListingRepository CarListingRepository => _serviceProvider.GetService<ICarListingRepository>();
+        public ICarListingPicturesRepository CarListingPicturesRepository => _serviceProvider.GetService<ICarListingPicturesRepository>();
+        public IManafacturerRepository ManafacturerRepository => _serviceProvider.GetService<IManafacturerRepository>();
+        public IModelRepository ModelRepository => _serviceProvider.GetService<IModelRepository>();
 
         public async Task<int> CompleteAsync() {
             return await _context.SaveChangesAsync();

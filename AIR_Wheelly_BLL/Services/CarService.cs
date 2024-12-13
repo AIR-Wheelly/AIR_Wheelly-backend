@@ -9,26 +9,28 @@ namespace AIR_Wheelly_BLL.Services;
 
 public class CarService : ICarService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CarService(ApplicationDbContext context)
+    public CarService(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<Manafacturer>> GetAllManafacturersAsync()
     {
-        return await _context.Manafacturers.ToListAsync();
+        return await _unitOfWork.ManafacturerRepository.GetAllAsync();
     }
 
     public async Task<IEnumerable<ModelDTO>> GetModelsByManafacturerIdAsync(Guid id)
     {
-        return await _context.Models.Where(m => m.ManafacturerId == id).Select(m => new ModelDTO()
+        var models = await _unitOfWork.ModelRepository.GetModelsByManafacturerIdAsync(id);
+
+        return models.Select(m => new ModelDTO()
         {
             Id = m.Id,
             ManafacturerId = m.ManafacturerId,
             Name = m.Name,
-        }).ToListAsync();
+        });
     }
     public IEnumerable<string> GetFuelTypes()
     {
@@ -52,34 +54,25 @@ public class CarService : ICarService
             UserId = carListingDto.UserId,
             IsActive = true
         };
-        _context.CarListings.Add(newCarListing);
-        await _context.SaveChangesAsync();
+        await _unitOfWork.CarListingRepository.AddAsync(newCarListing);
+        await _unitOfWork.CompleteAsync();
+
         return newCarListing.Id;
     }
+
     public async Task<IEnumerable<CarListing>> GetCarListingsAsync()
     {
-        var carListings = await _context.CarListings.Include(c => c.Model).ThenInclude(m => m.Manafacturer)
-            .Where(cl => cl.IsActive).ToListAsync();
-        return carListings;
+        return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
     }
 
-    public async Task<CarListing?> GetCarListingByIdAsync(Guid id, bool includeDetails = true)
+    public async Task<CarListing?> GetCarListingByIdAsync(Guid id)
     {
-        var query = _context.CarListings.AsQueryable();
-
-        if (includeDetails)
-            query = query.Include(c => c.Model)
-                         .ThenInclude(m => m.Manafacturer)
-                         .Where(cl => cl.IsActive);
-
-        var carListing = await query.FirstOrDefaultAsync(c => c.Id == id);
-
-        return carListing;
+        return await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
     }
 
     public async Task UploadCarListingPictures(IEnumerable<byte[]> files,  Guid listingId)
     {
-        var listing = await  GetCarListingByIdAsync(listingId, false);
+        var listing = await _unitOfWork.CarListingRepository.GetByIdAsync(listingId);
         if (listing is null)
             throw new ArgumentNullException(nameof(CarListing));
 
@@ -89,8 +82,8 @@ public class CarService : ICarService
             Image = Convert.ToBase64String(f)
         });
 
-        await _context.CarListingPictures.AddRangeAsync(listingPicutres);
-        await _context.SaveChangesAsync();
+        await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
+        await _unitOfWork.CompleteAsync();
     }
     
 }

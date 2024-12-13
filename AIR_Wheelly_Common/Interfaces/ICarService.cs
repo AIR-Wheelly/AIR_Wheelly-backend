@@ -10,6 +10,6 @@ public interface ICarService
     public IEnumerable<string> GetFuelTypes();
     Task<Guid> CreateCarListingAsync(CarListingDTO carListingDto);
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
-    Task<CarListing?> GetCarListingByIdAsync(Guid id, bool includeDetails = true);
+    Task<CarListing?> GetCarListingByIdAsync(Guid id);
     Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
 }

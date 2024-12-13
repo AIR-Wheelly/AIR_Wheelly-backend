@@ -7,7 +7,10 @@ namespace AIR_Wheelly_API.Extentions {
     public static class ServiceExtentions {
         public static void AddRepositories(this IServiceCollection services) {
             services.AddScoped<IUserRepository, UserRepository>()
-                    .AddScoped<ILocationRepository, LocationRepository>();
+                    .AddScoped<ILocationRepository, LocationRepository>()
+                    .AddScoped<ICarListingRepository, CarListingRepository>()
+                    .AddScoped<ICarListingPicturesRepository, CarListingPicturesRepository>()
+                    .AddScoped<IManafacturerRepository, ManafacturerRepository>();
         }
 
         public static void AddServices(this IServiceCollection services) {
