@@ -1,4 +1,5 @@
 using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
@@ -7,51 +8,52 @@ namespace AIR_Wheelly_BLL.Services;
 
 public class LocationService : ILocationService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public LocationService(ApplicationDbContext context)
+    public LocationService(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
     public async Task<Location> CreateLocationsAsync(Location location)
     {
         location.LocationId = Guid.NewGuid();
-        _context.Locations.Add(location);
-        await _context.SaveChangesAsync();
+        await _unitOfWork.LocationRepository.AddAsync(location);
+        await _unitOfWork.CompleteAsync();
         return location;
     }
+
     public async Task<List<Location>> GetLocationsAsync()
     {
-        var locations = await _context.Locations.ToListAsync();
-        return locations;
+        return await _unitOfWork.LocationRepository.GetAllAsync();
     }
-    public async Task<List<Location>> GetLocationsByIdAsync(Guid Id)
+
+    public async Task<Location?> GetLocationByIdAsync(Guid Id)
     {
-        var locations = await _context.Locations.Where(l => l.LocationId == Id).ToListAsync();
-        return locations;
+        return await _unitOfWork.LocationRepository.GetByIdAsync(Id);
     }
 
     public async Task<Location> UpdateLocationsAsync(Guid id, Location updatedLocation)
     {
-        var location = await _context.Locations.FindAsync(id);
+        var location = await GetLocationByIdAsync(id);
         if (location == null)
         {
             throw new KeyNotFoundException("Location not found");
         }
         location.Adress = updatedLocation.Adress;
-        await _context.SaveChangesAsync();
+        _unitOfWork.LocationRepository.Update(location);
+        await _unitOfWork.CompleteAsync();
         return location;    
     }
 
     public async Task DeleteLocationsAsync(Guid id)
     {
-        var location = await _context.Locations.FindAsync(id);
+        var location = await GetLocationByIdAsync(id);
         if (location == null)
         {
             throw new KeyNotFoundException("Location not found");
         }
-        _context.Locations.Remove(location);
-        await _context.SaveChangesAsync();
+        _unitOfWork.LocationRepository.Delete(location);
+        await _unitOfWork.CompleteAsync();
     }
     
 }

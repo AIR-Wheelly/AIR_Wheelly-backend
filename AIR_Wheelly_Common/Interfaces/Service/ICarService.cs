@@ -1,7 +1,7 @@
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Models;
 
-namespace AIR_Wheelly_Common.Interfaces;
+namespace AIR_Wheelly_Common.Interfaces.Service;
 
 public interface ICarService
 {
@@ -10,6 +10,6 @@ public interface ICarService
     public IEnumerable<string> GetFuelTypes();
     Task<Guid> CreateCarListingAsync(CarListingDTO carListingDto);
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
-    Task<IEnumerable<CarListing>> GetCarListingByIdAsync(Guid id);
-
+    Task<CarListing?> GetCarListingByIdAsync(Guid id);
+    Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
 }

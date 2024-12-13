@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AIR_Wheelly_DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241211175815_AddTimestampToLocation")]
-    partial class AddTimestampToLocation
+    [Migration("20241212223912_Create")]
+    partial class Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,11 +163,9 @@ namespace AIR_Wheelly_DAL.Migrations
 
             modelBuilder.Entity("AIR_Wheelly_Common.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp");

@@ -8,6 +8,6 @@ namespace AIR_Wheelly_Common.DTO
 {
     public class OAuthLoginDTO
     {
-        public string Token { get; set; } = string.Empty;
+        public string Token { get; set; }
     }
 }

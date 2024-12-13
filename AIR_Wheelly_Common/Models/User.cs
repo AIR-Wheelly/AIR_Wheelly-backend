@@ -5,8 +5,7 @@ namespace AIR_Wheelly_Common.Models;
 
 public class User
 {
-    [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -27,7 +26,6 @@ public class User
     [Required]
     [Column(TypeName = "timestamp")]
     public DateTime CreatedAt { get; set; }
-
 
     public User()
     {

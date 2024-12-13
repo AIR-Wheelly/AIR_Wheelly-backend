@@ -1,5 +1,5 @@
 ﻿using AIR_Wheelly_Common.DTO;
-using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +36,12 @@ namespace AIR_Wheelly_API.Controllers
         {
             try
             {
-                var user = await _authService.LoginUser(dto);
-                if (user == null)
+                var token = await _authService.LoginUser(dto);
+                if (token == null)
                 {
                     return Unauthorized("Invalid username or password");
                 }
 
-                var token = _authService.GenerateJwtToken(user.Id);
                 return Ok(new { Token = token });
 
             }
@@ -83,14 +82,14 @@ namespace AIR_Wheelly_API.Controllers
             if (dto.Token == string.Empty)
                 return BadRequest();
 
-            User? user = await _authService.OAuthLogin(dto.Token);
+            var token = await _authService.OAuthLogin(dto.Token);
 
-            if (user is null)
+            if (token is null)
                 return BadRequest();
 
-            var token = _authService.GenerateJwtToken(user.Id);
             return Ok(new { Token = token });
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromHeader] string authorization,
             [FromBody] UpdateProfileDTO dto)

@@ -1,12 +1,14 @@
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
-using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIR_Wheelly_API.Controllers;
 [Route("api/[controller]/[action]")]
 [ApiController]
+[Authorize]
 public class CarController : ControllerBase
 {
     private readonly ICarService _carService;
@@ -43,7 +45,7 @@ public class CarController : ControllerBase
         try
         {
             var newListingId = await _carService.CreateCarListingAsync(carListing);
-            return CreatedAtAction(nameof(GetCarListingsById), new { id = newListingId }, new{id = newListingId});
+            return CreatedAtAction(nameof(GetCarListingById), new { id = newListingId }, new{id = newListingId});
 
         }
         catch (Exception ex)
@@ -53,10 +55,40 @@ public class CarController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCarListingsById(Guid id)
+    public async Task<IActionResult> GetCarListingById(Guid id)
     {
         var carListing = await _carService.GetCarListingByIdAsync(id);
+
+        if (carListing is null)
+            return BadRequest(new { Message = $"No car listing with id {id}" });
+
         return Ok(carListing);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadCarListingPicture([FromForm] IList<IFormFile> files, [FromForm] Guid listingId)
+    {
+        try
+        {
+            IEnumerable<byte[]> filesBytes = files.Select(f =>
+            {
+                using var memoryStream = new MemoryStream();
+                f.CopyTo(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+                return fileBytes;
+            });
+            await _carService.UploadCarListingPictures(filesBytes, listingId);
+
+            return Created();
+        }
+        catch (ArgumentNullException ex)
+        {
+            if (ex.Message == nameof(CarListing))
+                return BadRequest(new { Message = "Car listing does not exist" });
+
+            return BadRequest(new { ex.Message });
+        }
+
     }
     
     
