@@ -54,6 +54,13 @@ public class CarController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> CarListings()
+    {
+        var carListings = await _carService.GetCarListingsAsync();
+        return Ok(carListings);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCarListingById(Guid id)
     {
