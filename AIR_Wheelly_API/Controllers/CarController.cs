@@ -1,6 +1,6 @@
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
-using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

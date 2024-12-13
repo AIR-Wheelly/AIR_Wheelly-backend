@@ -1,4 +1,4 @@
-﻿using AIR_Wheelly_Common.Interfaces;
+﻿using AIR_Wheelly_Common.Interfaces.Repository;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using System;

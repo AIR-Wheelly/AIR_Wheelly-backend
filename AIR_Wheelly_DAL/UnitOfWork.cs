@@ -1,11 +1,13 @@
 ﻿using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Repository;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using AIR_Wheelly_DAL.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace AIR_Wheelly_DAL {
+namespace AIR_Wheelly_DAL
+{
     public class UnitOfWork : IUnitOfWork, IDisposable {
         private readonly ApplicationDbContext _context;
         private readonly IServiceProvider _serviceProvider;

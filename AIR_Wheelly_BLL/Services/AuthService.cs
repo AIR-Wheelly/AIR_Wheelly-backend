@@ -6,6 +6,7 @@ using System.Text.Json;
 using AIR_Wheelly_BLL.Helpers;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

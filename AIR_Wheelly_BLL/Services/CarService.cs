@@ -1,6 +1,7 @@
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;

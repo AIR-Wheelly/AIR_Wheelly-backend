@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIR_Wheelly_Common.Interfaces
+namespace AIR_Wheelly_Common.Interfaces.Repository
 {
-    public interface ICarListingPicturesRepository : IRepository<CarListingPicture>
+    public interface ILocationRepository : IRepository<Location>
     {
     }
 }

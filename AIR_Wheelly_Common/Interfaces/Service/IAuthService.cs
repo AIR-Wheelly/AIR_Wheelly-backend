@@ -1,7 +1,7 @@
 ﻿using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Models;
 
-namespace AIR_Wheelly_Common.Interfaces
+namespace AIR_Wheelly_Common.Interfaces.Service
 {
     public interface IAuthService
     {
