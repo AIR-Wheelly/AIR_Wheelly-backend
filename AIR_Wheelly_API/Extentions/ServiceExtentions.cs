@@ -12,7 +12,8 @@ namespace AIR_Wheelly_API.Extentions
                     .AddScoped<ILocationRepository, LocationRepository>()
                     .AddScoped<ICarListingRepository, CarListingRepository>()
                     .AddScoped<ICarListingPicturesRepository, CarListingPicturesRepository>()
-                    .AddScoped<IManafacturerRepository, ManafacturerRepository>();
+                    .AddScoped<IManafacturerRepository, ManafacturerRepository>()
+                    .AddScoped<IModelRepository, ModelRepository>();
         }
 
         public static void AddServices(this IServiceCollection services) {
