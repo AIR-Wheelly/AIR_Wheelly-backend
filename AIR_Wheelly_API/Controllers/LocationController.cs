@@ -21,7 +21,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> CreateLocation([FromBody] Location location)
     {
         var newLocation = await _locations.CreateLocationsAsync(location);
-        return CreatedAtAction(nameof(GetLocationsById), new { id = newLocation.LocationId }, newLocation);
+        return CreatedAtAction(nameof(GetLocationsById), new { id = newLocation.LocationId }, new { result = newLocation });
     }
 
     [HttpGet("{Id}")]
