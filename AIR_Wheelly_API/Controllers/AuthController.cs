@@ -68,7 +68,7 @@ namespace AIR_Wheelly_API.Controllers
                     return Unauthorized("Invalid token");
                 }
 
-                return Ok(new { result = user });;
+                return Ok(new { result = user });
             }
             catch (Exception e)
             {
