@@ -15,6 +15,7 @@ public class CarListing
     public string Description {get; set;}
     public bool IsActive { get; set; }
     public Guid UserId { get; set; }
+    public User User { get; set; }
     
     public Model Model { get; set; }
     public ICollection<CarListingPicture> CarListingPictures { get; set; }
