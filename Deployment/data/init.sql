@@ -79,6 +79,14 @@ CREATE UNIQUE INDEX "IX_Users_Email" ON "Users" ("Email");
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20241212223912_Create', '9.0.0-rc.2.24474.1');
 
+CREATE INDEX "IX_CarListings_UserId" ON "CarListings" ("UserId");
+
+ALTER TABLE "CarListings" ADD CONSTRAINT "FK_CarListings_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20241216200001_connect-car-listing-and-user-table', '9.0.0-rc.2.24474.1');
+
+
 COMMIT;
 
 INSERT INTO "Manafacturers" ("Id", "Name")
