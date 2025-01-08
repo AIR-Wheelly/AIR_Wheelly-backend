@@ -1,4 +1,6 @@
-﻿using Braintree;
+﻿using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.Exceptions;
+using Braintree;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,30 @@ namespace AIR_Wheelly_BLL.Services
             var clientToken = await _gateway.ClientToken.GenerateAsync();
 
             return clientToken;
+        }
+
+        public async Task CreateTransaction(CreatePaymentDTO dto)
+        {
+            var request = new TransactionRequest
+            {
+                Amount = dto.Amount,
+                PaymentMethodNonce = dto.PaymentMethodNonce,
+                DeviceData = dto.DeviceData,
+                Options = new TransactionOptionsRequest
+                {
+                    SubmitForSettlement = true
+                }
+            };
+
+            Result<Transaction> result = await _gateway.Transaction.SaleAsync(request);
+
+            if (!result.IsSuccess())
+            {
+                throw new PaymentException(result.Message);
+            }
+
+            //TODO: Update reservation payment status (paid = true)
+            //dto.ReservationId
         }
     }
 }
