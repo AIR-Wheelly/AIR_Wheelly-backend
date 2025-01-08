@@ -17,10 +17,11 @@ namespace AIR_Wheelly_API.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet]
+        [HttpGet("clientId")]
         public async Task<IActionResult> GetClientId()
         {
-            return Ok(await _paymentService.GenerateClientToken());
+            var token = await _paymentService.GenerateClientToken();
+            return Ok(new {token});
         }
 
     }
