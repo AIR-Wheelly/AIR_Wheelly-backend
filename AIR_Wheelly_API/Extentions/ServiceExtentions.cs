@@ -19,7 +19,8 @@ namespace AIR_Wheelly_API.Extentions
         public static void AddServices(this IServiceCollection services) {
             services.AddScoped<IAuthService, AuthService>()
                     .AddScoped<ICarService, CarService>()
-                    .AddScoped<ILocationService, LocationService>();
+                    .AddScoped<ILocationService, LocationService>()
+                    .AddScoped<PaymentService>();
         }
 
         public static void AddHelpers(this IServiceCollection services) {
