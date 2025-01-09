@@ -19,4 +19,5 @@ public class CarListing
     
     public Model Model { get; set; }
     public ICollection<CarListingPicture> CarListingPictures { get; set; }
+    public ICollection<CarReservation> CarReservations { get; set; } = new List<CarReservation>();
 }

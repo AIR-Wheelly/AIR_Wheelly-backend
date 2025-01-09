@@ -26,6 +26,7 @@ public class User
     [Required]
     [Column(TypeName = "timestamp")]
     public DateTime CreatedAt { get; set; }
+    public ICollection<CarReservation> CarReservations { get; set; } = new List<CarReservation>();
 
     public User()
     {

@@ -86,8 +86,30 @@ ALTER TABLE "CarListings" ADD CONSTRAINT "FK_CarListings_Users_UserId" FOREIGN K
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20241216200001_connect-car-listing-and-user-table', '9.0.0-rc.2.24474.1');
 
+CREATE TABLE "CarReservations" (
+    "Id" uuid NOT NULL,
+    "CarListingId" uuid NOT NULL,
+    "UserId" uuid NOT NULL,
+    "StartDate" timestamp without time zone NOT NULL,
+    "EndDate" timestamp without time zone NOT NULL,
+    "TotalPrice" double precision NOT NULL,
+    "Status" integer NOT NULL,
+    "IsPaid" boolean NOT NULL,
+    "CreatedAt" timestamp without time zone NOT NULL,
+    CONSTRAINT "PK_CarReservations" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_CarReservations_CarListings_CarListingId" FOREIGN KEY ("CarListingId") REFERENCES "CarListings" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_CarReservations_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_CarReservations_CarListingId" ON "CarReservations" ("CarListingId");
+
+CREATE INDEX "IX_CarReservations_UserId" ON "CarReservations" ("UserId");
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20250109222907_create-table-reservation', '9.0.0-rc.2.24474.1');
 
 COMMIT;
+
 
 INSERT INTO "Manafacturers" ("Id", "Name")
 VALUES
