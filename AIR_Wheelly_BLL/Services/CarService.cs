@@ -88,6 +88,17 @@ public class CarService : ICarService
     }
     public async Task<CarReservation> CreateRentalAsync(Guid carListingId, Guid userId)
     {
+        var isActive = await _unitOfWork.CarListingRepository.IsCarListingActiveAsync(carListingId);
+        if (!isActive)
+        {
+            throw new InvalidOperationException($"Car listing has not been active");
+        }
+        var alReadyRented = await _unitOfWork.CarReservationRepository.ExistsActiveRentalForCarAsync(carListingId);
+        if (!alReadyRented)
+        {
+            throw new InvalidOperationException($"Car is already rented");
+
+        }
         var carListing = await _unitOfWork.CarListingRepository.GetByIdAsync(carListingId);
         if (carListing == null)
         {

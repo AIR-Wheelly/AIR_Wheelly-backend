@@ -1,3 +1,4 @@
+using AIR_Wheelly_BLL.Helpers;
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces.Service;
@@ -12,9 +13,11 @@ namespace AIR_Wheelly_API.Controllers;
 public class CarController : ControllerBase
 {
     private readonly ICarService _carService;
-    public CarController(ICarService carService)
+    private readonly JwtHelper _jwtHelper;
+    public CarController(ICarService carService, JwtHelper jwtHelper)
     {
         _carService = carService;
+        _jwtHelper = jwtHelper;
     }
     [HttpGet]
     public IActionResult GetFuelType()

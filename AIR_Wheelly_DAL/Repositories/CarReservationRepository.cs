@@ -1,4 +1,5 @@
-﻿using AIR_Wheelly_Common.Interfaces.Repository;
+﻿using AIR_Wheelly_Common.Enums;
+using AIR_Wheelly_Common.Interfaces.Repository;
 using AIR_Wheelly_Common.Models;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
@@ -33,4 +34,10 @@ public class CarReservationRepository : Repository<CarReservation>, ICarReservat
             .Where(r => r.CarListingId == carListingId)
             .ToListAsync();
     }
+    public async Task<bool> ExistsActiveRentalForCarAsync(Guid carListingId)
+    {
+        return await _context.CarReservations
+            .AnyAsync(r => r.CarListingId == carListingId && r.Status == RentalStatus.Confirmed);
+    }
+
 }
