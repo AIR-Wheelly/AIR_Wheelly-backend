@@ -20,6 +20,7 @@ namespace AIR_Wheelly_DAL.Repositories
         {
             return await _dbSet.Include(c => c.Model)
                 .ThenInclude(m => m.Manafacturer)
+                .Include(l => l.Location)
                 .Where(cl => cl.IsActive)
                 .ToListAsync();
         }
