@@ -32,5 +32,14 @@ namespace AIR_Wheelly_DAL.Repositories
                          .Where(cl => cl.IsActive)
                          .FirstOrDefaultAsync(c => c.Id == id);
         }
+       
+        public async Task<CarListing?> GetCarListingById(Guid id)
+        {
+            return await _dbSet
+                .Where(c => c.Id == id && c.IsActive) 
+                .FirstOrDefaultAsync();
+        }
+
+
     }
 }

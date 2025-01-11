@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AIR_Wheelly_Common.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -53,6 +54,7 @@ public class JwtHelper
         };
         var token = handler.CreateToken(tokenDescriptor);
         return handler.WriteToken(token);
-
     }
+    
+
 }

@@ -20,6 +20,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<CarListing> CarListings { get; set; }
     public DbSet<CarListingPicture> CarListingPictures { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<CarReservation> CarReservations { get; set; }
     
     
 
@@ -61,6 +62,12 @@ public class ApplicationDbContext : DbContext
         {
             en.HasKey(picture => picture.Id);
             en.HasOne(picture => picture.CarListing).WithMany(picture => picture.CarListingPictures).HasForeignKey(picture => picture.CarListingId);
+        });
+        modelBuilder.Entity<CarReservation>(en =>
+        {
+            en.HasKey(reservation => reservation.Id);
+            en.HasOne(cr => cr.CarListing).WithMany(cl => cl.CarReservations).HasForeignKey(reservation => reservation.CarListingId).OnDelete(DeleteBehavior.Cascade);
+            en.HasOne(cr => cr.User).WithMany(u => u.CarReservations).HasForeignKey(reservation => reservation.UserId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 

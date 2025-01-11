@@ -1,4 +1,5 @@
 using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.DTO.Response;
 using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
@@ -85,6 +86,51 @@ public class CarService : ICarService
 
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
         await _unitOfWork.CompleteAsync();
+    }
+    public async Task<CarReservationResponse> CreateRentalAsync(Guid userId, CarReservationDTO dto)
+    {
+        if (dto.StartDate >= dto.EndDate)
+        {
+            throw new ArgumentException("End date must be after start date.");
+
+        }
+        var carListing = await _unitOfWork.CarListingRepository.GetCarListingById(dto.CarListingId);
+        if (carListing == null)
+        {
+            throw new InvalidOperationException("No  car listing found or car is inactive.");
+        }
+        var alReadyRented = await _unitOfWork.CarReservationRepository.ExistsActiveRentalForCarAsync(carListing.Id, dto.StartDate, dto.EndDate);
+        if (alReadyRented)
+        {
+            throw new InvalidOperationException($"Car is already rented");
+        }
+       
+        var rental = new CarReservation()
+        {
+            CarListingId = carListing.Id,
+            UserId = userId,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+            TotalPrice = carListing.RentalPriceType * (dto.EndDate - dto.StartDate).Days,
+            Status = RentalStatus.Confirmed,
+            IsPaid = false,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _unitOfWork.CarReservationRepository.AddAsync(rental);
+        await _unitOfWork.CompleteAsync();
+        var carReservationResponse = new CarReservationResponse()
+        {
+            Id = rental.Id,
+            UserId = rental.UserId,
+            StartDate = rental.StartDate,
+            EndDate = rental.EndDate,
+            TotalPrice = rental.TotalPrice,
+            Status = rental.Status.ToString(),
+            IsPaid = rental.IsPaid,
+            
+        };
+        return carReservationResponse;
     }
     
 }

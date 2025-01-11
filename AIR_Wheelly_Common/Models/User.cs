@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace AIR_Wheelly_Common.Models;
 
@@ -26,6 +27,8 @@ public class User
     [Required]
     [Column(TypeName = "timestamp")]
     public DateTime CreatedAt { get; set; }
+    [JsonIgnore]
+    public ICollection<CarReservation> CarReservations { get; set; } = new List<CarReservation>();
 
     public User()
     {
