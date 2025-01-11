@@ -1,3 +1,4 @@
+using AIR_Wheelly_BLL.Helpers;
 using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces.Service;
@@ -12,9 +13,11 @@ namespace AIR_Wheelly_API.Controllers;
 public class CarController : ControllerBase
 {
     private readonly ICarService _carService;
-    public CarController(ICarService carService)
+    private readonly JwtHelper _jwtHelper;
+    public CarController(ICarService carService, JwtHelper jwtHelper)
     {
         _carService = carService;
+        _jwtHelper = jwtHelper;
     }
     [HttpGet]
     public IActionResult GetFuelType()
@@ -101,6 +104,53 @@ public class CarController : ControllerBase
         }
 
     }
+     [HttpPost]
+     public async Task<IActionResult> CreateRental([FromBody] CarReservationDTO dto)
+     {
+         try
+         {
+             var userId = GetUserIdFromToken();
+             var rental = await _carService.CreateRentalAsync(userId,dto);
+             return Ok(rental);
+         }
+         catch (InvalidOperationException ex)
+         {
+             return BadRequest(new { message = ex.Message });
+         }
+         catch (ArgumentException ex)
+         {
+             return NotFound(new { message = ex.Message });
+         }
+     }
+
+     [HttpGet]
+     public async Task<IActionResult> GetReservationsByUser()
+     {
+         var userId = GetUserIdFromToken();
+         var reservations = await _carService.GetCarReservationsAsync(userId);
+         return Ok(reservations);
+     }
+
+     [HttpGet]
+     public async Task<IActionResult> GetReservationsForMyCars()
+     {
+         var userId = GetUserIdFromToken();
+         var reservations = await _carService.GetCarReservationsForOwner(userId);
+         return Ok(reservations);   
+     }
+
+
+     private Guid GetUserIdFromToken()
+     {
+         var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer","").Trim();
+         var userIdString = _jwtHelper.GetUserIdFromJwt(token);
+         if (!Guid.TryParse(userIdString, out  var userId))
+         {
+             throw new UnauthorizedAccessException("Invalid token");
+         }
+         return userId;
+         
+     }
 
 
 }

@@ -20,6 +20,7 @@ namespace AIR_Wheelly_DAL.Repositories
         {
             return await _dbSet.Include(c => c.Model)
                 .ThenInclude(m => m.Manafacturer)
+                .Include(l => l.Location)
                 .Where(cl => cl.IsActive)
                 .ToListAsync();
         }
@@ -32,5 +33,14 @@ namespace AIR_Wheelly_DAL.Repositories
                          .Where(cl => cl.IsActive)
                          .FirstOrDefaultAsync(c => c.Id == id);
         }
+       
+        public async Task<CarListing?> GetCarListingById(Guid id)
+        {
+            return await _dbSet
+                .Where(c => c.Id == id && c.IsActive) 
+                .FirstOrDefaultAsync();
+        }
+
+
     }
 }

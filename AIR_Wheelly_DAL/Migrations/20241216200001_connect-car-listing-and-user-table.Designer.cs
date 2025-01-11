@@ -3,6 +3,7 @@ using System;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AIR_Wheelly_DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216200001_connect-car-listing-and-user-table")]
+    partial class connectcarlistingandusertable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,45 +97,6 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.HasIndex("CarListingId");
 
                     b.ToTable("CarListingPictures");
-                });
-
-            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarReservation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CarListingId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("double precision");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarListingId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CarReservations");
                 });
 
             modelBuilder.Entity("AIR_Wheelly_Common.Models.Location", b =>
@@ -273,25 +237,6 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.Navigation("CarListing");
                 });
 
-            modelBuilder.Entity("AIR_Wheelly_Common.Models.CarReservation", b =>
-                {
-                    b.HasOne("AIR_Wheelly_Common.Models.CarListing", "CarListing")
-                        .WithMany("CarReservations")
-                        .HasForeignKey("CarListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AIR_Wheelly_Common.Models.User", "User")
-                        .WithMany("CarReservations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CarListing");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AIR_Wheelly_Common.Models.Model", b =>
                 {
                     b.HasOne("AIR_Wheelly_Common.Models.Manafacturer", "Manafacturer")
@@ -306,8 +251,6 @@ namespace AIR_Wheelly_DAL.Migrations
             modelBuilder.Entity("AIR_Wheelly_Common.Models.CarListing", b =>
                 {
                     b.Navigation("CarListingPictures");
-
-                    b.Navigation("CarReservations");
                 });
 
             modelBuilder.Entity("AIR_Wheelly_Common.Models.Manafacturer", b =>
@@ -318,11 +261,6 @@ namespace AIR_Wheelly_DAL.Migrations
             modelBuilder.Entity("AIR_Wheelly_Common.Models.Model", b =>
                 {
                     b.Navigation("CarListings");
-                });
-
-            modelBuilder.Entity("AIR_Wheelly_Common.Models.User", b =>
-                {
-                    b.Navigation("CarReservations");
                 });
 #pragma warning restore 612, 618
         }

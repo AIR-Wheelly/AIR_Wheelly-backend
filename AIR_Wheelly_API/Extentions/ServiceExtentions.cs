@@ -7,19 +7,22 @@ using AIR_Wheelly_DAL.Repositories;
 namespace AIR_Wheelly_API.Extentions
 {
     public static class ServiceExtentions {
-        public static void AddRepositories(this IServiceCollection services) {
+        public static void AddRepositories(this IServiceCollection services)
+        {
             services.AddScoped<IUserRepository, UserRepository>()
-                    .AddScoped<ILocationRepository, LocationRepository>()
-                    .AddScoped<ICarListingRepository, CarListingRepository>()
-                    .AddScoped<ICarListingPicturesRepository, CarListingPicturesRepository>()
-                    .AddScoped<IManafacturerRepository, ManafacturerRepository>()
-                    .AddScoped<IModelRepository, ModelRepository>();
+                .AddScoped<ILocationRepository, LocationRepository>()
+                .AddScoped<ICarListingRepository, CarListingRepository>()
+                .AddScoped<ICarListingPicturesRepository, CarListingPicturesRepository>()
+                .AddScoped<IManafacturerRepository, ManafacturerRepository>()
+                .AddScoped<IModelRepository, ModelRepository>()
+                .AddScoped<ICarReservationRepository, CarReservationRepository>();
         }
 
         public static void AddServices(this IServiceCollection services) {
             services.AddScoped<IAuthService, AuthService>()
                     .AddScoped<ICarService, CarService>()
-                    .AddScoped<ILocationService, LocationService>();
+                    .AddScoped<ILocationService, LocationService>()
+                    .AddScoped<PaymentService>();
         }
 
         public static void AddHelpers(this IServiceCollection services) {
