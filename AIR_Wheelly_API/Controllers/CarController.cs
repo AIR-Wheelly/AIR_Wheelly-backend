@@ -123,6 +123,23 @@ public class CarController : ControllerBase
          }
      }
 
+     [HttpGet]
+     public async Task<IActionResult> GetReservationsByUser()
+     {
+         var userId = GetUserIdFromToken();
+         var reservations = await _carService.GetCarReservationsAsync(userId);
+         return Ok(reservations);
+     }
+
+     [HttpGet]
+     public async Task<IActionResult> GetReservationsForMyCars()
+     {
+         var userId = GetUserIdFromToken();
+         var reservations = await _carService.GetCarReservationsForOwner(userId);
+         return Ok(reservations);   
+     }
+
+
      private Guid GetUserIdFromToken()
      {
          var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer","").Trim();
