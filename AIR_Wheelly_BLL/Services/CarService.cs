@@ -86,5 +86,29 @@ public class CarService : ICarService
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
         await _unitOfWork.CompleteAsync();
     }
+    public async Task<CarReservation> CreateRentalAsync(Guid carListingId, Guid userId)
+    {
+        var carListing = await _unitOfWork.CarListingRepository.GetByIdAsync(carListingId);
+        if (carListing == null)
+        {
+            throw new ArgumentException("Car listing not found.");
+        }
+
+        var rental = new CarReservation()
+        {
+            CarListingId = carListingId,
+            UserId = userId,
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(1),
+            TotalPrice = carListing.RentalPriceType,
+            Status = RentalStatus.Confirmed,
+            IsPaid = false,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _unitOfWork.CarReservationRepository.AddAsync(rental);
+        await _unitOfWork.CompleteAsync();
+        return rental;
+    }
     
 }

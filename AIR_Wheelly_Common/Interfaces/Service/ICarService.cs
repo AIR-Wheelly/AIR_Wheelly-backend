@@ -12,4 +12,5 @@ public interface ICarService
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
     Task<CarListing?> GetCarListingByIdAsync(Guid id);
     Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
+    Task<CarReservation> CreateRentalAsync(Guid carListingId, Guid userId);
 }

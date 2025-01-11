@@ -101,6 +101,23 @@ public class CarController : ControllerBase
         }
 
     }
+     [HttpPost]
+     public async Task<IActionResult> CreateRental([FromBody] CarReservationDTO dto)
+     {
+         try
+         {
+             var rental = await _carService.CreateRentalAsync(dto.CarListingId, dto.UserId);
+             return Ok(rental);
+         }
+         catch (InvalidOperationException ex)
+         {
+             return BadRequest(new { message = ex.Message });
+         }
+         catch (ArgumentException ex)
+         {
+             return NotFound(new { message = ex.Message });
+         }
+     }
 
 
 }

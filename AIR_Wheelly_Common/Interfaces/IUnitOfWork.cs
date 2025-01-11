@@ -15,6 +15,7 @@ namespace AIR_Wheelly_Common.Interfaces
         IManafacturerRepository ManafacturerRepository { get; }
         IModelRepository ModelRepository { get; }
         ICarReservationRepository CarReservationRepository { get; }
+        
 
         public Task<int> CompleteAsync();
     }
