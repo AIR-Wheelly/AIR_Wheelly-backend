@@ -2,20 +2,18 @@
 using AIR_Wheelly_Common.Exceptions;
 using Braintree;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AIR_Wheelly_Common.Interfaces;
 
 namespace AIR_Wheelly_BLL.Services
 {
     public class PaymentService
     {
         private readonly BraintreeGateway _gateway;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PaymentService(IConfiguration config)
+        public PaymentService(IConfiguration config, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             var braintreeSettings = config.GetSection("Braintree");
 
             _gateway = new BraintreeGateway()
@@ -36,9 +34,14 @@ namespace AIR_Wheelly_BLL.Services
 
         public async Task CreateTransaction(CreatePaymentDTO dto)
         {
+            var reservation = await _unitOfWork.CarReservationRepository.GetByIdAsync(dto.ReservationId);
+            if (reservation == null)
+            {
+                throw new PaymentException("Reservation not found");
+            }
             var request = new TransactionRequest
             {
-                Amount = dto.Amount,
+                Amount = (decimal)reservation.TotalPrice,
                 PaymentMethodNonce = dto.PaymentMethodNonce,
                 DeviceData = dto.DeviceData,
                 Options = new TransactionOptionsRequest
@@ -54,8 +57,10 @@ namespace AIR_Wheelly_BLL.Services
                 throw new PaymentException(result.Message);
             }
 
-            //TODO: Update reservation payment status (paid = true)
-            //dto.ReservationId
+          
+            reservation.IsPaid = true;
+             _unitOfWork.CarReservationRepository.Update(reservation);
+             await _unitOfWork.CompleteAsync();
         }
     }
 }
