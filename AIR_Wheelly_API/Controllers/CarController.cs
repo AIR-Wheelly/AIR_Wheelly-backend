@@ -105,11 +105,12 @@ public class CarController : ControllerBase
 
     }
      [HttpPost]
-     public async Task<IActionResult> CreateRental([FromBody] CarReservationDTO dto)
+     public async Task<IActionResult> CreateRental()
      {
          try
          {
-             var rental = await _carService.CreateRentalAsync(dto.CarListingId, dto.UserId);
+             var userId = GetUserIdFromToken();
+             var rental = await _carService.CreateRentalAsync(userId);
              return Ok(rental);
          }
          catch (InvalidOperationException ex)
@@ -120,6 +121,18 @@ public class CarController : ControllerBase
          {
              return NotFound(new { message = ex.Message });
          }
+     }
+
+     private Guid GetUserIdFromToken()
+     {
+         var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer","");
+         var userIdString = _jwtHelper.GetUserIdFromJwt(token);
+         if (!Guid.TryParse(userIdString, out  var userId))
+         {
+             throw new UnauthorizedAccessException("Invalid token");
+         }
+         return userId;
+         
      }
 
 

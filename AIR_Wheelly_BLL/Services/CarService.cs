@@ -86,28 +86,23 @@ public class CarService : ICarService
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
         await _unitOfWork.CompleteAsync();
     }
-    public async Task<CarReservation> CreateRentalAsync(Guid carListingId, Guid userId)
+    public async Task<CarReservation> CreateRentalAsync(Guid userId)
     {
-        var isActive = await _unitOfWork.CarListingRepository.IsCarListingActiveAsync(carListingId);
-        if (!isActive)
+        var carListing = await _unitOfWork.CarListingRepository.GetCarListingByUserIdAsync(userId);
+        if (carListing == null)
         {
-            throw new InvalidOperationException($"Car listing has not been active");
+            throw new InvalidOperationException("No active car listing found for this user.");
         }
-        var alReadyRented = await _unitOfWork.CarReservationRepository.ExistsActiveRentalForCarAsync(carListingId);
+        var alReadyRented = await _unitOfWork.CarReservationRepository.ExistsActiveRentalForCarAsync(carListing.Id);
         if (!alReadyRented)
         {
             throw new InvalidOperationException($"Car is already rented");
 
         }
-        var carListing = await _unitOfWork.CarListingRepository.GetByIdAsync(carListingId);
-        if (carListing == null)
-        {
-            throw new ArgumentException("Car listing not found.");
-        }
-
+       
         var rental = new CarReservation()
         {
-            CarListingId = carListingId,
+            CarListingId = carListing.Id,
             UserId = userId,
             StartDate = DateTime.UtcNow,
             EndDate = DateTime.UtcNow.AddDays(1),

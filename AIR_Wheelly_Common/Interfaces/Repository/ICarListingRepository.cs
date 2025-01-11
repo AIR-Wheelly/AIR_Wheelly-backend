@@ -11,7 +11,8 @@ namespace AIR_Wheelly_Common.Interfaces.Repository
     {
         Task<IEnumerable<CarListing>> GetCarListingsWithDetailsAsync();
         Task<CarListing?> GetCarListingWithDetailsAsync(Guid id);
-        Task<bool> IsCarListingActiveAsync(Guid carListingId);
+        Task<CarListing?> GetCarListingByUserIdAsync(Guid userId);
+
 
     }
 }
