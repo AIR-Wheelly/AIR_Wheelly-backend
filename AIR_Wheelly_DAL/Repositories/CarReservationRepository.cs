@@ -34,10 +34,14 @@ public class CarReservationRepository : Repository<CarReservation>, ICarReservat
             .Where(r => r.CarListingId == carListingId)
             .ToListAsync();
     }
-    public async Task<bool> ExistsActiveRentalForCarAsync(Guid carListingId)
+    public async Task<bool> ExistsActiveRentalForCarAsync(Guid carListingId , DateTime startDate, DateTime endDate)
     {
         return await _context.CarReservations
-            .AnyAsync(r => r.CarListingId == carListingId && r.Status == RentalStatus.Confirmed);
+            .AnyAsync(r => r.CarListingId == carListingId &&
+                           r.Status == RentalStatus.Confirmed &&
+                           ((startDate >= r.StartDate && startDate < r.EndDate) ||
+                            (endDate > r.StartDate && endDate <= r.EndDate) ||
+                            (startDate <= r.StartDate && endDate >= r.EndDate)));
     }
 
 }

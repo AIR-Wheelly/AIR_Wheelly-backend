@@ -110,7 +110,7 @@ public class CarController : ControllerBase
          try
          {
              var userId = GetUserIdFromToken();
-             var rental = await _carService.CreateRentalAsync(userId, dto.NumberOfDays, dto.CarListingId);
+             var rental = await _carService.CreateRentalAsync(userId,dto);
              return Ok(rental);
          }
          catch (InvalidOperationException ex)
