@@ -123,6 +123,7 @@ public class CarService : ICarService
         {
             Id = rental.Id,
             UserId = rental.UserId,
+            CarListingId = rental.CarListingId,
             StartDate = rental.StartDate,
             EndDate = rental.EndDate,
             TotalPrice = rental.TotalPrice,
@@ -132,5 +133,36 @@ public class CarService : ICarService
         };
         return carReservationResponse;
     }
-    
+
+    public async Task<IEnumerable<CarReservationResponse>> GetCarReservationsAsync(Guid userId)
+    {
+        var reservations = await _unitOfWork.CarReservationRepository.GetByUserIdAsync(userId);
+        return reservations.Select(r => new CarReservationResponse()
+        {
+            Id = r.Id,
+            UserId = r.UserId,
+            CarListingId = r.CarListingId,
+            StartDate = r.StartDate,
+            EndDate = r.EndDate,
+            TotalPrice = r.TotalPrice,
+            Status = r.Status.ToString(),
+            IsPaid = r.IsPaid,
+        }).ToList();
+    }
+    public async Task<IEnumerable<CarReservationResponse>> GetCarReservationsForOwner(Guid ownerId)
+    {
+        var reservations = await _unitOfWork.CarReservationRepository.GetReservationForOwner(ownerId);
+        return reservations.Select(r => new CarReservationResponse()
+        {
+            Id = r.Id,
+            UserId = r.UserId,
+            CarListingId = r.CarListingId,
+            StartDate = r.StartDate,
+            EndDate = r.EndDate,
+            TotalPrice = r.TotalPrice,
+            Status = r.Status.ToString(),
+            IsPaid = r.IsPaid,
+        }).ToList();
+    }
+
 }

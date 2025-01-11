@@ -6,8 +6,8 @@ public interface ICarReservationRepository : IRepository<CarReservation>
 {
     Task<CarReservation?> GetByIdAsync(Guid rentalId);
     Task<List<CarReservation>> GetByUserIdAsync(Guid userId);
-    Task<List<CarReservation>> GetByCarListingIdAsync(Guid carListingId);
     Task<bool> ExistsActiveRentalForCarAsync(Guid carListingId, DateTime startDate, DateTime endDate);
+    Task<List<CarReservation>> GetReservationForOwner(Guid ownerId);
 
 
 }
