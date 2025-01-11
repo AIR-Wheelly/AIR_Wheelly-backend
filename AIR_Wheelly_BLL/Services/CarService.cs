@@ -1,4 +1,5 @@
 using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.DTO.Response;
 using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
@@ -86,18 +87,19 @@ public class CarService : ICarService
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
         await _unitOfWork.CompleteAsync();
     }
-    public async Task<CarReservation> CreateRentalAsync(Guid userId)
+    public async Task<CarReservationResponse> CreateRentalAsync(Guid userId, int numberOfDays, Guid carListingId)
     {
-        var carListing = await _unitOfWork.CarListingRepository.GetCarListingByUserIdAsync(userId);
+        if (numberOfDays < 0)
+            throw new ArgumentException("Rental period must be at least 1 day.");
+        var carListing = await _unitOfWork.CarListingRepository.GetCarListingById(carListingId);
         if (carListing == null)
         {
-            throw new InvalidOperationException("No active car listing found for this user.");
+            throw new InvalidOperationException("No  car listing found or car is inactive.");
         }
         var alReadyRented = await _unitOfWork.CarReservationRepository.ExistsActiveRentalForCarAsync(carListing.Id);
         if (!alReadyRented)
         {
             throw new InvalidOperationException($"Car is already rented");
-
         }
        
         var rental = new CarReservation()
@@ -105,8 +107,8 @@ public class CarService : ICarService
             CarListingId = carListing.Id,
             UserId = userId,
             StartDate = DateTime.UtcNow,
-            EndDate = DateTime.UtcNow.AddDays(1),
-            TotalPrice = carListing.RentalPriceType,
+            EndDate = DateTime.UtcNow.AddDays(numberOfDays),
+            TotalPrice = carListing.RentalPriceType * numberOfDays,
             Status = RentalStatus.Confirmed,
             IsPaid = false,
             CreatedAt = DateTime.UtcNow
@@ -114,7 +116,18 @@ public class CarService : ICarService
 
         await _unitOfWork.CarReservationRepository.AddAsync(rental);
         await _unitOfWork.CompleteAsync();
-        return rental;
+        var carReservationResponse = new CarReservationResponse()
+        {
+            Id = rental.Id,
+            UserId = rental.UserId,
+            StartDate = rental.StartDate,
+            EndDate = rental.EndDate,
+            TotalPrice = rental.TotalPrice,
+            Status = rental.Status.ToString(),
+            IsPaid = rental.IsPaid,
+            
+        };
+        return carReservationResponse;
     }
     
 }

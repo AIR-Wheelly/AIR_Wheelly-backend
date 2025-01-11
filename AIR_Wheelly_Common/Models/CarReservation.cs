@@ -7,8 +7,8 @@ public class CarReservation
     public Guid Id { get; set; }
     public Guid CarListingId { get; set; }
     public Guid UserId { get; set; }
-    public DateTime StartDate { get; set; } = DateTime.UtcNow;
-    public DateTime EndDate { get; set; } = DateTime.UtcNow.AddDays(1);
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
     public double TotalPrice { get; set; }
     public RentalStatus Status { get; set; } = RentalStatus.Pending;
     public bool IsPaid { get; set; } = false;

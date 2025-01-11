@@ -3,5 +3,6 @@
 public class CarReservationDTO
 {
     public Guid CarListingId { get; set; }
-    public Guid UserId { get; set; }
+    public int NumberOfDays { get; set; }
+
 }

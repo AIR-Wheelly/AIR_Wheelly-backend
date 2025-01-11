@@ -1,4 +1,5 @@
 using AIR_Wheelly_Common.DTO;
+using AIR_Wheelly_Common.DTO.Response;
 using AIR_Wheelly_Common.Models;
 
 namespace AIR_Wheelly_Common.Interfaces.Service;
@@ -12,5 +13,5 @@ public interface ICarService
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
     Task<CarListing?> GetCarListingByIdAsync(Guid id);
     Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
-    Task<CarReservation> CreateRentalAsync(Guid userId);
+    Task<CarReservationResponse> CreateRentalAsync(Guid userId, int numberOfDays, Guid carListingId);
 }
