@@ -76,7 +76,7 @@ public class CarController : ControllerBase
         if (carListing is null)
             return BadRequest(new { Message = $"No car listing with id {id}" });
 
-        return Ok(carListing);
+        return Ok(new { result = carListing });
     }
 
     [HttpPost]
@@ -128,7 +128,8 @@ public class CarController : ControllerBase
      {
          var userId = GetUserIdFromToken();
          var reservations = await _carService.GetCarReservationsAsync(userId);
-         return Ok(reservations);
+
+         return Ok(new {result = reservations});
      }
 
      [HttpGet]
