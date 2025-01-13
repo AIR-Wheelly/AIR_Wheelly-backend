@@ -28,7 +28,7 @@ namespace AIR_Wheelly_DAL.Repositories
         public async Task<CarListing?> GetCarListingWithDetailsAsync(Guid id)
         {
             return await _dbSet.Include(c => c.Model)
-                         .ThenInclude(m => m.Manafacturer)
+                         .ThenInclude(m => m.Manafacturer).Include(l => l.Location)
                          .Include(c => c.CarListingPictures)
                          .Where(cl => cl.IsActive)
                          .FirstOrDefaultAsync(c => c.Id == id);
