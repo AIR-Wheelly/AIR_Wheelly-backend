@@ -22,6 +22,7 @@ public class User
     public string Email { get; set; }
 
     [Required]
+    [JsonIgnore]
     public string Password { get; set; }
 
     [Required]

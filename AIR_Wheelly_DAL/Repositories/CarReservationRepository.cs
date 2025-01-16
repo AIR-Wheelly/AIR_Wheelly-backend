@@ -30,7 +30,7 @@ public class CarReservationRepository : Repository<CarReservation>, ICarReservat
 
     public async Task<List<CarReservation>>GetReservationForOwner(Guid ownerId)
     {
-        return await _context.CarReservations.Include(r => r.CarListing).Include(r => r.User)
+        return await _context.CarReservations.Include(r => r.CarListing).Include(r => r.User).Include(r => r.CarListing.Model)
             .Where(r => r.CarListing.UserId == ownerId).ToListAsync();
     }
     public async Task<bool> ExistsActiveRentalForCarAsync(Guid carListingId , DateTime startDate, DateTime endDate)

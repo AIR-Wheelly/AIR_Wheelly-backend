@@ -11,9 +11,8 @@ namespace AIR_Wheelly_Common.Interfaces.Service
 {
     public interface IPaymentService
     {
+        Task<string> GenerateClientToken();
 
-        public Task<string> GenerateClientToken();
-
-        public Task CreateTransaction(CreatePaymentDTO dto);
+        Task CreateTransaction(CreatePaymentDTO dto);
     }
 }

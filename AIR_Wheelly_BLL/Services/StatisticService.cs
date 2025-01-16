@@ -1,9 +1,12 @@
-﻿using AIR_Wheelly_Common.Interfaces;
+﻿using AIR_Wheelly_Common.DTO.Response;
+using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
+using AIR_Wheelly_Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AIR_Wheelly_BLL.Services
@@ -17,7 +20,17 @@ namespace AIR_Wheelly_BLL.Services
             _work = work;
         }
 
-
+        public async Task<IEnumerable<GetNumberOfRentsPerCarResponseItemDTO>> GetNumberOfRentsPerCar(Guid userId)
+        {
+            List<CarReservation> allUserCarReservations = await _work.CarReservationRepository.GetReservationForOwner(userId);
+            IEnumerable<GetNumberOfRentsPerCarResponseItemDTO> numberOfRentsPerCar = allUserCarReservations.Select(r => r.CarListing).GroupBy(l => l.Id).Select(g => new GetNumberOfRentsPerCarResponseItemDTO()
+            {
+                Id = g.Key,
+                Count = g.Count(),
+                Car = g.First()
+            });
+            return numberOfRentsPerCar;
+        }
     }
 
 }
