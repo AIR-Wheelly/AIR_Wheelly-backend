@@ -3,10 +3,11 @@ using AIR_Wheelly_Common.Exceptions;
 using Braintree;
 using Microsoft.Extensions.Configuration;
 using AIR_Wheelly_Common.Interfaces;
+using AIR_Wheelly_Common.Interfaces.Service;
 
 namespace AIR_Wheelly_BLL.Services
 {
-    public class PaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly BraintreeGateway _gateway;
         private readonly IUnitOfWork _unitOfWork;
