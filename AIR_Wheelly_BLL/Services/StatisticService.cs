@@ -20,6 +20,34 @@ namespace AIR_Wheelly_BLL.Services
             _work = work;
         }
 
+        public async Task<GetNumberOfRentsInTheLastMonthResponseDTO> GetLastMonthsStatistics(Guid userId)
+        {
+            List<CarReservation> allUserCarReservations = await _work.CarReservationRepository.GetReservationForOwner(userId);
+
+            DateTime lastMonth = DateTime.Now.AddMonths(-1);
+            List<CarReservation> allUserCarReservationsInTheLastMonth = allUserCarReservations.Where(x => x.CreatedAt.Month == lastMonth.Month && x.CreatedAt.Year == lastMonth.Year).ToList();
+
+            GetNumberOfRentsPerCarResponseItemDTO? mostRentedCar = allUserCarReservationsInTheLastMonth
+               .Select(r => r.CarListing)
+               .GroupBy(l => l.Id)
+               .Select(g => new GetNumberOfRentsPerCarResponseItemDTO
+               {
+                   Id = g.Key,
+                   Count = g.Count(),
+                   Car = g.First()
+               })
+               .OrderByDescending(item => item.Count) 
+               .FirstOrDefault(); 
+
+            return new GetNumberOfRentsInTheLastMonthResponseDTO()
+            {
+                Count = allUserCarReservationsInTheLastMonth.Count,
+                Listing = mostRentedCar
+            };
+
+
+        }
+
         public async Task<IEnumerable<GetNumberOfRentsPerCarResponseItemDTO>> GetNumberOfRentsPerCar(Guid userId)
         {
             List<CarReservation> allUserCarReservations = await _work.CarReservationRepository.GetReservationForOwner(userId);

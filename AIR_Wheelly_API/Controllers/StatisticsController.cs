@@ -37,5 +37,20 @@ namespace AIR_Wheelly_API.Controllers
             }
             
         }
+
+        [HttpGet]
+        public async Task<IActionResult> LastMonth([FromHeader] string authorization)
+        {
+            try
+            {
+                var id = Guid.Parse(_jwtHelper.GetUserIdFromJwt(authorization.Replace("Bearer ", "").Trim()));
+                var stats = await _service.GetLastMonthsStatistics(id);
+                return Ok(new { result = stats });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
     }
 }

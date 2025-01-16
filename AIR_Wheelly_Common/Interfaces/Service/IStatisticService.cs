@@ -9,6 +9,7 @@ namespace AIR_Wheelly_Common.Interfaces.Service
 {
     public interface IStatisticService
     {
+        Task<GetNumberOfRentsInTheLastMonthResponseDTO> GetLastMonthsStatistics(Guid userId);
         Task<IEnumerable<GetNumberOfRentsPerCarResponseItemDTO>> GetNumberOfRentsPerCar(Guid userId);
     }
 }
