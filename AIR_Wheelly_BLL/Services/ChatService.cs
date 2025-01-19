@@ -46,4 +46,21 @@ public class ChatService : IChatService
             await groupManager.AddToGroupAsync(connectionId, reservation.Id.ToString());
         }
     }
+    public async Task<(Guid OwnerId, Guid RenterId)> GetChatParticipantsAsync(Guid reservationId)
+    {
+        var reservation = await _unitOfWork.CarReservationRepository.GetByIdAsync(reservationId);
+        if (reservation == null)
+        {
+            throw new ArgumentException("Reservation not found");
+        }
+
+        var carListing = await _unitOfWork.CarListingRepository.GetByIdAsync(reservation.CarListingId);
+        if (carListing == null)
+        {
+            throw new ArgumentException("Car listing not found");
+        }
+
+        return (OwnerId: carListing.UserId, RenterId: reservation.UserId);
+    }
+
 }

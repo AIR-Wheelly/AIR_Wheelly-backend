@@ -16,18 +16,24 @@ public class ChatHub : Hub
     public async Task SendMessage(Guid reservationId, string message)
     {
         var userId = Context.User?.FindFirst("id")?.Value;
-        var isValidUser = userId != null && await _chatService.IsUserPartOfReservationAsync(reservationId, Guid.Parse(userId));
+        if (userId == null || !Guid.TryParse(userId, out var senderId))
+        {
+            throw new UnauthorizedAccessException("Invalid user");
+        }
+        var isValidUser = await _chatService.IsUserPartOfReservationAsync(reservationId, senderId);
         if (!isValidUser)
         {
-            throw new UnauthorizedAccessException("User is not authorized to send messages in this chat");
+            throw new UnauthorizedAccessException("User is not part of reservation.");
         }
-
-        if (userId != null)
+        var (ownerId, renterId) = await _chatService.GetChatParticipantsAsync(reservationId);
+        if (senderId != ownerId && senderId != renterId)
         {
-            var chatMessage = _chatService.CreateMessage(reservationId, Guid.Parse(userId), message);
-            await Clients.Group(reservationId.ToString()).SendAsync("ReceiveMessage", chatMessage);
+            throw new UnauthorizedAccessException("User is not authorized to participate in this chat");
         }
+        var chatMessage = _chatService.CreateMessage(reservationId, senderId, message);
+        await Clients.Group(reservationId.ToString()).SendAsync("ReceiveMessage", chatMessage);
     }
+
 
     public override async Task OnConnectedAsync()
     {
