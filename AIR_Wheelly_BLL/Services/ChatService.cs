@@ -1,9 +1,7 @@
 ﻿using AIR_Wheelly_Common.DTO;
-using AIR_Wheelly_Common.DTO.Response;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace AIR_Wheelly_BLL.Services;
 

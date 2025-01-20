@@ -1,5 +1,4 @@
 ﻿using AIR_Wheelly_Common.DTO;
-using AIR_Wheelly_Common.DTO.Response;
 using Microsoft.AspNetCore.SignalR;
 
 namespace AIR_Wheelly_Common.Interfaces.Service;
