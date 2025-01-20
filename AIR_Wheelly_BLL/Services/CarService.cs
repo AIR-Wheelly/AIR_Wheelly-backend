@@ -4,8 +4,7 @@ using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
-using AIR_Wheelly_DAL.Data;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace AIR_Wheelly_BLL.Services;
 
@@ -67,9 +66,27 @@ public class CarService : ICarService
         return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
     }
 
-    public async Task<CarListing?> GetCarListingByIdAsync(Guid id)
+    public async Task<IEnumerable<CarListingResponse>> GetCarListingByIdAsync(Guid id)
     {
-        return await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
+        var carListing = await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
+        return carListing.Select(c => new CarListingResponse()
+        {
+            Id = c.Id,
+            ModelId = c.ModelId,
+            YearOfProduction = c.YearOfProduction,
+            FuelType = c.FuelType,
+            NumberOfSeats = c.NumberOfSeats,
+            RentalPriceType = c.RentalPriceType,
+            NumberOfKilometers = c.NumberOfKilometers,
+            RegistrationNumber = c.RegistrationNumber,
+            Description = c.Description,
+            UserId = c.UserId,
+            IsActive = c.IsActive,
+            LocationId = c.LocationId,
+            Location = c.Location,
+            Model = c.Model,
+            CarListingPictures = c.CarListingPictures
+        }).ToList();
     }
 
     public async Task UploadCarListingPictures(IEnumerable<byte[]> files,  Guid listingId)
