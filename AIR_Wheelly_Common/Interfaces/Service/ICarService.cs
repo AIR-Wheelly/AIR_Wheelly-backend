@@ -11,7 +11,7 @@ public interface ICarService
     IEnumerable<string> GetFuelTypes();
     Task<Guid> CreateCarListingAsync(CarListingDTO carListingDto);
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
-    Task<IEnumerable<CarListingResponse>> GetCarListingByIdAsync(Guid id);
+    Task<CarListingResponse> GetCarListingByIdAsync(Guid id);
     Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
     Task<CarReservationResponse> CreateRentalAsync(Guid userId,CarReservationDTO dto);
     Task<IEnumerable<CarReservationResponse>> GetCarReservationsAsync(Guid userId);

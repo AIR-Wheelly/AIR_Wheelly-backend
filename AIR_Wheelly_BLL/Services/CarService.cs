@@ -66,27 +66,27 @@ public class CarService : ICarService
         return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
     }
 
-    public async Task<IEnumerable<CarListingResponse>> GetCarListingByIdAsync(Guid id)
+    public async Task<CarListingResponse> GetCarListingByIdAsync(Guid id)
     {
         var carListing = await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
-        return carListing.Select(c => new CarListingResponse()
+        return new CarListingResponse()
         {
-            Id = c.Id,
-            ModelId = c.ModelId,
-            YearOfProduction = c.YearOfProduction,
-            FuelType = c.FuelType,
-            NumberOfSeats = c.NumberOfSeats,
-            RentalPriceType = c.RentalPriceType,
-            NumberOfKilometers = c.NumberOfKilometers,
-            RegistrationNumber = c.RegistrationNumber,
-            Description = c.Description,
-            UserId = c.UserId,
-            IsActive = c.IsActive,
-            LocationId = c.LocationId,
-            Location = c.Location,
-            Model = c.Model,
-            CarListingPictures = c.CarListingPictures
-        }).ToList();
+            Id = carListing.Id,
+            ModelId = carListing.ModelId,
+            YearOfProduction = carListing.YearOfProduction,
+            FuelType = carListing.FuelType,
+            NumberOfSeats = carListing.NumberOfSeats,
+            RentalPriceType = carListing.RentalPriceType,
+            NumberOfKilometers = carListing.NumberOfKilometers,
+            RegistrationNumber = carListing.RegistrationNumber,
+            Description = carListing.Description,
+            UserId = carListing.UserId,
+            IsActive = carListing.IsActive,
+            LocationId = carListing.LocationId,
+            Location = carListing.Location,
+            Model = carListing.Model,
+            CarListingPictures = carListing.CarListingPictures
+        };
     }
 
     public async Task UploadCarListingPictures(IEnumerable<byte[]> files,  Guid listingId)
