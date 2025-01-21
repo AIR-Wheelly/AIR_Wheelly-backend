@@ -34,7 +34,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> GetLocations()
     {
         var locations = await _locations.GetLocationsAsync();
-        return Ok(locations);
+        return Ok(new{result = locations});
     }
 
     [HttpPut("{Id}")]
@@ -43,7 +43,7 @@ public class LocationController : ControllerBase
         try
         {
             var updatedLocation = await _locations.UpdateLocationsAsync(Id, location);
-            return Ok(updatedLocation);
+            return Ok(new {result = updatedLocation});
 
         }
         catch (KeyNotFoundException)
