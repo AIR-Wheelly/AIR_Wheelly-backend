@@ -46,7 +46,7 @@ public class CarService : ICarService
             ModelId = carListingDto.ModelId,
             YearOfProduction = carListingDto.YearOfProduction,
             FuelType = carListingDto.FuelType,
-            RentalPriceType = carListingDto.RentalPrice,
+            RentalPriceType = carListingDto.RentalPriceType,
             NumberOfSeats = carListingDto.NumberOfSeats,
             LocationId = carListingDto.LocationId,
             NumberOfKilometers = carListingDto.NumberOfKilometers,
