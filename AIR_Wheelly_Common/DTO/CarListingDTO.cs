@@ -8,7 +8,7 @@ public class CarListingDTO
     public int YearOfProduction { get; set; }
     public int NumberOfSeats { get; set; }
     public string FuelType { get; set; }
-    public double RentalPrice { get; set; }
+    public double RentalPriceType { get; set; }
     public Guid LocationId { get; set; }
     public double NumberOfKilometers { get; set; }
     public string RegistrationNumber { get; set; }
