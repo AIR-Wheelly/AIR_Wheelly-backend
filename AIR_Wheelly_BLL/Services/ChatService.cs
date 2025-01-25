@@ -23,7 +23,14 @@ public class ChatService : IChatService
         {
             return false;
         }
-        return reservation.UserId == userId || reservation.CarListingId == userId;
+        var carListing = await _unitOfWork.CarListingRepository.GetByIdAsync(reservation.CarListingId);
+        if (carListing == null)
+        {
+            return false;
+        }
+        var isPartOfReservation = reservation.UserId == userId || carListing.UserId == userId;
+        return isPartOfReservation;
+       
     }
 
     public ChatDTO CreateMessage(Guid reservationId, Guid senderId, string message)
@@ -32,20 +39,23 @@ public class ChatService : IChatService
         {
             ReservationId = reservationId,
             SenderId = senderId,
-            Message = message
+            Message = message,
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         };
     }
 
     public async Task AddUserToReservationAsync(IGroupManager groupManager, string connectionId, Guid userId)
     {
-        var reservations = await _unitOfWork.CarReservationRepository.GetByUserIdAsync(userId);
-        foreach (var reservation in reservations)
+        
+        var reservationsAsRenter = await _unitOfWork.CarReservationRepository.GetByUserIdAsync(userId);
+        foreach (var reservation in reservationsAsRenter)
         {
             await groupManager.AddToGroupAsync(connectionId, reservation.Id.ToString());
         }
     }
     public async Task<(Guid OwnerId, Guid RenterId)> GetChatParticipantsAsync(Guid reservationId)
     {
+
         var reservation = await _unitOfWork.CarReservationRepository.GetByIdAsync(reservationId);
         if (reservation == null)
         {
@@ -57,7 +67,7 @@ public class ChatService : IChatService
         {
             throw new ArgumentException("Car listing not found");
         }
-
+        
         return (OwnerId: carListing.UserId, RenterId: reservation.UserId);
     }
 
