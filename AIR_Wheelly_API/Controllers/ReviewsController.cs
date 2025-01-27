@@ -30,6 +30,10 @@ namespace AIR_Wheelly_API.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null)
+                {
+                    return BadRequest(new { ex.InnerException.Message });
+                }
                 return BadRequest(new { ex.Message });
             }
         }
