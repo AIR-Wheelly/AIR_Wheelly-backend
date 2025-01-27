@@ -27,7 +27,8 @@ namespace AIR_Wheelly_API.Extentions
                 .AddScoped<IChatService,ChatService>()
                 .AddScoped<ILocationService, LocationService>()
                 .AddScoped<IPaymentService, PaymentService>()
-                .AddScoped<IStatisticService, StatisticService>();
+                .AddScoped<IStatisticService, StatisticService>()
+                .AddScoped<IReviewService, ReviewService>();
         }
 
         public static void AddHelpers(this IServiceCollection services) {
