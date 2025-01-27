@@ -25,6 +25,7 @@ namespace AIR_Wheelly_DAL
         public IManafacturerRepository ManafacturerRepository => _serviceProvider.GetService<IManafacturerRepository>();
         public IModelRepository ModelRepository => _serviceProvider.GetService<IModelRepository>();
         public  ICarReservationRepository CarReservationRepository => _serviceProvider.GetService<ICarReservationRepository>();
+        public IReviewRepository ReviewRepository => _serviceProvider.GetService<IReviewRepository>();
 
         public async Task<int> CompleteAsync() {
             return await _context.SaveChangesAsync();
