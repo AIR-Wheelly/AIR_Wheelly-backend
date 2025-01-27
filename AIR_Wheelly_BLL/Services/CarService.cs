@@ -85,7 +85,8 @@ public class CarService : ICarService
             LocationId = carListing.LocationId,
             Location = carListing.Location,
             Model = carListing.Model,
-            CarListingPictures = carListing.CarListingPictures
+            CarListingPictures = carListing.CarListingPictures,
+            Reviews = carListing.Reviews,
         };
     }
 
