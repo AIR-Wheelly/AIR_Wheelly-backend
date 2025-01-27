@@ -51,4 +51,8 @@ public class CarReservationRepository : Repository<CarReservation>, ICarReservat
                             (startDate <= r.StartDate && endDate >= r.EndDate)));
     }
 
+    public async Task<CarReservation?> GetByListingAndUserId(Guid listingId, Guid userId)
+    {
+        return await _context.CarReservations.Where(x => x.CarListingId == listingId && x.UserId == userId).FirstOrDefaultAsync();
+    }
 }
