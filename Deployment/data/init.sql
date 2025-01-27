@@ -108,6 +108,35 @@ CREATE INDEX "IX_CarReservations_UserId" ON "CarReservations" ("UserId");
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20250109222907_create-table-reservation', '9.0.0-rc.2.24474.1');
 
+CREATE TABLE "Review" (
+    "UserId" uuid NOT NULL,
+    "ListingId" uuid NOT NULL,
+    "Grade" integer NOT NULL,
+    "CarListingId" uuid NOT NULL,
+    "CreatedAt" timestamp without time zone NOT NULL,
+    CONSTRAINT "PK_Review" PRIMARY KEY ("UserId", "ListingId"),
+    CONSTRAINT "FK_Review_CarListings_CarListingId" FOREIGN KEY ("CarListingId") REFERENCES "CarListings" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Review_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_Review_CarListingId" ON "Review" ("CarListingId");
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20250127190244_AddReviewsTable', '9.0.0-rc.2.24474.1');
+
+ALTER TABLE "Review" DROP CONSTRAINT "FK_Review_Users_UserId";
+
+ALTER TABLE "Review" DROP CONSTRAINT "PK_Review";
+
+ALTER TABLE "Review" DROP COLUMN "ListingId";
+
+ALTER TABLE "Review" ADD CONSTRAINT "PK_Review" PRIMARY KEY ("UserId", "CarListingId");
+
+ALTER TABLE "Review" ADD CONSTRAINT "FK_Review_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE SET NULL;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20250127195507_FixReviewRelationships', '9.0.0-rc.2.24474.1');
+
 COMMIT;
 
 
