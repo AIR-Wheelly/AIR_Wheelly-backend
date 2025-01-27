@@ -10,10 +10,9 @@ namespace AIR_Wheelly_Common.Models
 {
     public class Review
     {
-        [Range(1, 5)]
         public int Grade { get; set; }
         public Guid UserId { get; set; }
-        public Guid ListingId { get; set; }
+        public Guid CarListingId { get; set; }
 
         [JsonIgnore]
         public User User { get; set; } = null!;

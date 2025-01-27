@@ -24,5 +24,5 @@ public class CarListing
     [JsonIgnore]
     public ICollection<CarReservation> CarReservations { get; set; } = new List<CarReservation>();
 
-    public ICollection<Review> Reviews { get; set; } = null!;
+    public ICollection<Review> Reviews { get; set; } = [];
 }

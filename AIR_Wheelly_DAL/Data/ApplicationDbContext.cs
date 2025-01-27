@@ -71,7 +71,19 @@ public class ApplicationDbContext : DbContext
         });
 
         modelBuilder.Entity<Review>()
-        .HasKey(r => new { r.UserId, r.ListingId });
+        .HasKey(r => new { r.UserId, r.CarListingId });
+
+        modelBuilder.Entity<Review>()
+        .HasOne(r => r.CarListing)
+        .WithMany(c => c.Reviews)
+        .HasForeignKey(r => r.CarListingId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Reviews)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
