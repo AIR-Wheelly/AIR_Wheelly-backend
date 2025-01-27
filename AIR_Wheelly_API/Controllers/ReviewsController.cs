@@ -21,6 +21,9 @@ namespace AIR_Wheelly_API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateReview([FromBody]CreateReviewDTO dto, [FromHeader] string authorization)
         {
+            if (dto.ListingId == Guid.Empty) 
+                return BadRequest(new { Message = "ListingId is required"});
+
             try
             {
                 var userId = Guid.Parse(_jwtHelper.GetUserIdFromJwt(authorization.Replace("Bearer ", "").Trim()));

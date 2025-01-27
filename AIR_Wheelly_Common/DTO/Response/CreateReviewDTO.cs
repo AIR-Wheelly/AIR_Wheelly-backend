@@ -9,7 +9,10 @@ namespace AIR_Wheelly_Common.DTO.Response
 {
     public class CreateReviewDTO
     {
+        [Required]
+        [Range(1,5)]
         public int Grade { get; set; }
+        [Required]
         public Guid ListingId { get; set; }
     }
 }
