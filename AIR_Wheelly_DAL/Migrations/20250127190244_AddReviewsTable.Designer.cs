@@ -3,6 +3,7 @@ using System;
 using AIR_Wheelly_DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AIR_Wheelly_DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127190244_AddReviewsTable")]
+    partial class AddReviewsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,6 +207,9 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("CarListingId")
                         .HasColumnType("uuid");
 
@@ -213,7 +219,7 @@ namespace AIR_Wheelly_DAL.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "CarListingId");
+                    b.HasKey("UserId", "ListingId");
 
                     b.HasIndex("CarListingId");
 
@@ -333,9 +339,9 @@ namespace AIR_Wheelly_DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("AIR_Wheelly_Common.Models.User", "User")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CarListing");
@@ -365,8 +371,6 @@ namespace AIR_Wheelly_DAL.Migrations
             modelBuilder.Entity("AIR_Wheelly_Common.Models.User", b =>
                 {
                     b.Navigation("CarReservations");
-
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }
