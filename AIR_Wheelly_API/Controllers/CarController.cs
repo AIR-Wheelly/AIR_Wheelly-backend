@@ -137,7 +137,7 @@ public class CarController : ControllerBase
      {
          var userId = GetUserIdFromToken();
          var reservations = await _carService.GetCarReservationsForOwner(userId);
-         return Ok(reservations);   
+         return Ok(new {result = reservations});   
      }
 
 

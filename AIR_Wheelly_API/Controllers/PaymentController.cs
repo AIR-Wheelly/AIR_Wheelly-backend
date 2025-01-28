@@ -1,6 +1,7 @@
 ﻿using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Exceptions;
+using AIR_Wheelly_Common.Interfaces.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,9 @@ namespace AIR_Wheelly_API.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly PaymentService _paymentService;
+        private readonly IPaymentService _paymentService;
 
-        public PaymentController(PaymentService paymentService)
+        public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }

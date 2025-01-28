@@ -8,10 +8,10 @@ public interface ICarService
 {
     Task<IEnumerable<Manafacturer>> GetAllManafacturersAsync();
     Task<IEnumerable<ModelDTO>> GetModelsByManafacturerIdAsync(Guid Id);
-    public IEnumerable<string> GetFuelTypes();
+    IEnumerable<string> GetFuelTypes();
     Task<Guid> CreateCarListingAsync(CarListingDTO carListingDto);
     Task<IEnumerable<CarListing>> GetCarListingsAsync();
-    Task<CarListing?> GetCarListingByIdAsync(Guid id);
+    Task<CarListingResponse> GetCarListingByIdAsync(Guid id);
     Task UploadCarListingPictures(IEnumerable<byte[]> files, Guid listingId);
     Task<CarReservationResponse> CreateRentalAsync(Guid userId,CarReservationDTO dto);
     Task<IEnumerable<CarReservationResponse>> GetCarReservationsAsync(Guid userId);

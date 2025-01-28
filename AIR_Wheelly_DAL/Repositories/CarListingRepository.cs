@@ -27,11 +27,22 @@ namespace AIR_Wheelly_DAL.Repositories
 
         public async Task<CarListing?> GetCarListingWithDetailsAsync(Guid id)
         {
-            return await _dbSet.Include(c => c.Model)
-                         .ThenInclude(m => m.Manafacturer)
-                         .Include(c => c.CarListingPictures)
-                         .Where(cl => cl.IsActive)
-                         .FirstOrDefaultAsync(c => c.Id == id);
+            var carListing = await _context.CarListings
+                .Include(cl => cl.Model)
+                .Include(cl => cl.Model.Manafacturer)
+                .Include(cl => cl.Location)
+                .Include(cl => cl.CarListingPictures)
+                .Where(cl => cl.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (carListing == null)
+                return null;
+
+            carListing.Model.ManafacturerName = (await _context.Manafacturers
+                .FindAsync(carListing?.Model.ManafacturerId))?.Name;
+
+            return carListing;
+           
         }
        
         public async Task<CarListing?> GetCarListingById(Guid id)
@@ -39,6 +50,24 @@ namespace AIR_Wheelly_DAL.Repositories
             return await _dbSet
                 .Where(c => c.Id == id && c.IsActive) 
                 .FirstOrDefaultAsync();
+        }
+        public async Task<List<CarListing>> GetListingsForOwnerAsync(Guid ownerId)
+        {
+            var carListings = await _context.CarListings
+                .Include(cl => cl.Model) 
+                .Include(cl => cl.Model.Manafacturer)
+                .Include(cl => cl.Location) 
+                .Include(cl => cl.CarListingPictures) 
+                .Where(cl => cl.Id == ownerId)
+                .ToListAsync();
+
+            foreach (var carListing in carListings)
+            {
+                carListing.Model.ManafacturerName = (await _context.Manafacturers
+                    .FindAsync(carListing.Model.ManafacturerId))?.Name;
+            }
+
+            return carListings;
         }
 
 

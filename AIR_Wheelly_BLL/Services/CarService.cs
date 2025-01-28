@@ -4,8 +4,7 @@ using AIR_Wheelly_Common.Enums;
 using AIR_Wheelly_Common.Interfaces;
 using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
-using AIR_Wheelly_DAL.Data;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace AIR_Wheelly_BLL.Services;
 
@@ -47,7 +46,7 @@ public class CarService : ICarService
             ModelId = carListingDto.ModelId,
             YearOfProduction = carListingDto.YearOfProduction,
             FuelType = carListingDto.FuelType,
-            RentalPriceType = carListingDto.RentalPrice,
+            RentalPriceType = carListingDto.RentalPriceType,
             NumberOfSeats = carListingDto.NumberOfSeats,
             LocationId = carListingDto.LocationId,
             NumberOfKilometers = carListingDto.NumberOfKilometers,
@@ -67,9 +66,27 @@ public class CarService : ICarService
         return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
     }
 
-    public async Task<CarListing?> GetCarListingByIdAsync(Guid id)
+    public async Task<CarListingResponse> GetCarListingByIdAsync(Guid id)
     {
-        return await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
+        var carListing = await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
+        return new CarListingResponse()
+        {
+            Id = carListing.Id,
+            ModelId = carListing.ModelId,
+            YearOfProduction = carListing.YearOfProduction,
+            FuelType = carListing.FuelType,
+            NumberOfSeats = carListing.NumberOfSeats,
+            RentalPriceType = carListing.RentalPriceType,
+            NumberOfKilometers = carListing.NumberOfKilometers,
+            RegistrationNumber = carListing.RegistrationNumber,
+            Description = carListing.Description,
+            UserId = carListing.UserId,
+            IsActive = carListing.IsActive,
+            LocationId = carListing.LocationId,
+            Location = carListing.Location,
+            Model = carListing.Model,
+            CarListingPictures = carListing.CarListingPictures
+        };
     }
 
     public async Task UploadCarListingPictures(IEnumerable<byte[]> files,  Guid listingId)
