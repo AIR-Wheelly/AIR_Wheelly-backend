@@ -1,10 +1,11 @@
+using AIR_Wheelly_API.Hubs;
 using AIR_Wheelly_BLL.Helpers;
-using AIR_Wheelly_BLL.Services;
 using AIR_Wheelly_Common.DTO;
 using AIR_Wheelly_Common.Interfaces.Service;
 using AIR_Wheelly_Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AIR_Wheelly_API.Controllers;
 [Route("api/[controller]/[action]")]
@@ -14,10 +15,13 @@ public class CarController : ControllerBase
 {
     private readonly ICarService _carService;
     private readonly JwtHelper _jwtHelper;
-    public CarController(ICarService carService, JwtHelper jwtHelper)
+    private readonly IHubContext<NotificationHub> _notificationHub;
+
+    public CarController(ICarService carService, JwtHelper jwtHelper, IHubContext<NotificationHub> notificationHub)
     {
         _carService = carService;
         _jwtHelper = jwtHelper;
+        _notificationHub = notificationHub;
     }
     [HttpGet]
     public IActionResult GetFuelType()
@@ -111,6 +115,15 @@ public class CarController : ControllerBase
          {
              var userId = GetUserIdFromToken();
              var rental = await _carService.CreateRentalAsync(userId,dto);
+             await _notificationHub.Clients.Group(rental.CarListing.UserId.ToString())
+                 .SendAsync("RecieveNotification", new
+                 {
+                     Message = "New rental request received for your car!",
+                     RentalId = rental.Id,
+                     RenterId = userId,
+                     RentalDate = DateTime.UtcNow
+                 });
+             
              return Ok(rental);
          }
          catch (InvalidOperationException ex)
