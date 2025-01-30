@@ -57,7 +57,7 @@ public class NotificationHub : Hub
                     EndDate = reservation.EndDate
                 };
 
-                await Clients.User(reservation.UserId.ToString()).SendAsync("ReceiveNotification", notificationMessage);
+                await Clients.User(reservation.UserId.ToString()).SendAsync("NotifyOwner", notificationMessage);
             }
         }
         catch (Exception ex)
