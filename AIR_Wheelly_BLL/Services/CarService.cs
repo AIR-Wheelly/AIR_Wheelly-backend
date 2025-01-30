@@ -132,7 +132,8 @@ public class CarService : ICarService
             TotalPrice = carListing.RentalPriceType * (dto.EndDate - dto.StartDate).Days,
             Status = RentalStatus.Confirmed,
             IsPaid = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CarListing = carListing,
         };
 
         await _unitOfWork.CarReservationRepository.AddAsync(rental);
@@ -147,7 +148,7 @@ public class CarService : ICarService
             TotalPrice = rental.TotalPrice,
             Status = rental.Status.ToString(),
             IsPaid = rental.IsPaid,
-            
+            OwnerId = carListing.UserId
         };
         return carReservationResponse;
     }

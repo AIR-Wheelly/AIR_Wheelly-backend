@@ -115,7 +115,7 @@ public class CarController : ControllerBase
          {
              var userId = GetUserIdFromToken();
              var rental = await _carService.CreateRentalAsync(userId,dto);
-             await _notificationHub.Clients.Group(rental.CarListing.UserId.ToString())
+             await _notificationHub.Clients.Group(rental.OwnerId.ToString())
                  .SendAsync("NotifyOwner", new
                  {
                      Message = "New rental request received for your car!",
