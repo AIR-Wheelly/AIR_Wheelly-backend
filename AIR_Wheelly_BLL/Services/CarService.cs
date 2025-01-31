@@ -168,6 +168,11 @@ public class CarService : ICarService
             IsPaid = r.IsPaid,
         }).ToList();
     }
+    public async Task<CarReservation> GetCarReservationsByIdAsync(Guid reservationId)
+    {
+        var reservations = await _unitOfWork.CarReservationRepository.GetByIdAsync(reservationId);
+        return reservations;
+    }
     public async Task<IEnumerable<CarReservationResponse>> GetCarReservationsForOwner(Guid ownerId)
     {
         var reservations = await _unitOfWork.CarReservationRepository.GetReservationForOwner(ownerId);

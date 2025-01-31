@@ -14,11 +14,15 @@ public class NotificationHub : Hub
 
     public override async Task OnConnectedAsync()
     {
+        Console.WriteLine($"User connected: {Context.ConnectionId}");
+
         var userId = Context.User?.FindFirst("id")?.Value;
 
         if (!string.IsNullOrEmpty(userId))
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+            Console.WriteLine($"User {userId} added to group.");
+
         }
 
         await base.OnConnectedAsync();
@@ -26,6 +30,7 @@ public class NotificationHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        Console.WriteLine($"User disconnected: {Context.ConnectionId}");
         var userId = Context.User?.FindFirst("id")?.Value;
 
         if (!string.IsNullOrEmpty(userId))
@@ -37,33 +42,32 @@ public class NotificationHub : Hub
     }
     public async Task NotifyOwner(Guid reservationId)
     {
-        try
+        Console.WriteLine($"[DEBUG] Notifikacija started for reservationId: {reservationId}");
+
+        var reservation = await _carService.GetCarReservationsByIdAsync(reservationId);
+
+        if (reservation == null)
         {
-            var reservations = await _carService.GetCarReservationsForOwner(reservationId);
-
-            if (reservations == null || !reservations.Any())
-            {
-                throw new InvalidOperationException($"No reservations found for reservation ID {reservationId}.");
-            }
-
-            foreach (var reservation in reservations)
-            {
-                var notificationMessage = new
-                {
-                    ReservationId = reservation.Id,
-                    Message = $"A new reservation has been made for car  {reservation.CarListingId}.",
-                    TotalPrice = reservation.TotalPrice,
-                    StartDate = reservation.StartDate,
-                    EndDate = reservation.EndDate
-                };
-
-                await Clients.User(reservation.UserId.ToString()).SendAsync("NotifyOwner", notificationMessage);
-            }
+            throw new InvalidOperationException($"Reservation with  {reservationId} not found.");
         }
-        catch (Exception ex)
+
+        var carListing = await _carService.GetCarListingByIdAsync(reservation.CarListingId);
+
+        if (carListing == null)
         {
-            Console.WriteLine($"Error sending notification for Reservation ID {reservationId}: {ex.Message}");
-            throw;
+            throw new InvalidOperationException($"Car with Id :  {reservation.CarListingId} not found");
         }
+
+        var ownerId = carListing.UserId.ToString();
+
+        var notificationMessage = new
+        {
+            ReservationId = reservationId,
+            Message = $"Nova rezervacija je napravljena za vaše vozilo: {carListing.Model.ManafacturerName}",
+            RenterId = reservation.UserId
+        };
+
+        await Clients.Group(ownerId).SendAsync("NotifyOwner", notificationMessage);
+        Console.WriteLine($"[DEBUG]Notifikacija poslana vlasniku s ID-om: {ownerId}");
     }
 }

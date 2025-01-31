@@ -121,7 +121,7 @@ public class CarController : ControllerBase
                      Message = "New rental request received for your car!",
                      RentalId = rental.Id,
                      RenterId = userId,
-                     RentalDate = DateTime.UtcNow
+                     RentalDate = $"From {rental.StartDate} to {rental.EndDate}"
                  });
              
              return Ok(rental);
