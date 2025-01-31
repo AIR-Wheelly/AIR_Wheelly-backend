@@ -69,6 +69,21 @@ public class ApplicationDbContext : DbContext
             en.HasOne(cr => cr.CarListing).WithMany(cl => cl.CarReservations).HasForeignKey(reservation => reservation.CarListingId).OnDelete(DeleteBehavior.Cascade);
             en.HasOne(cr => cr.User).WithMany(u => u.CarReservations).HasForeignKey(reservation => reservation.UserId).OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<Review>()
+        .HasKey(r => new { r.UserId, r.CarListingId });
+
+        modelBuilder.Entity<Review>()
+        .HasOne(r => r.CarListing)
+        .WithMany(c => c.Reviews)
+        .HasForeignKey(r => r.CarListingId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Reviews)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

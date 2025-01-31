@@ -66,9 +66,13 @@ public class CarService : ICarService
         return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
     }
 
-    public async Task<CarListingResponse> GetCarListingByIdAsync(Guid id)
+    public async Task<CarListingResponse?> GetCarListingByIdAsync(Guid id)
     {
         var carListing = await _unitOfWork.CarListingRepository.GetCarListingWithDetailsAsync(id);
+
+        if (carListing == null)
+            return null;
+
         return new CarListingResponse()
         {
             Id = carListing.Id,
@@ -85,7 +89,8 @@ public class CarService : ICarService
             LocationId = carListing.LocationId,
             Location = carListing.Location,
             Model = carListing.Model,
-            CarListingPictures = carListing.CarListingPictures
+            CarListingPictures = carListing.CarListingPictures,
+            Reviews = carListing.Reviews,
         };
     }
 

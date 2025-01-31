@@ -30,7 +30,8 @@ public class User
     public DateTime CreatedAt { get; set; }
     [JsonIgnore]
     public ICollection<CarReservation> CarReservations { get; set; } = new List<CarReservation>();
-
+    [JsonIgnore]
+    public ICollection<Review> Reviews { get; set; }
     public User()
     {
         CreatedAt = DateTime.Now;

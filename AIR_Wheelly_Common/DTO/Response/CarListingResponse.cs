@@ -19,4 +19,5 @@ public class CarListingResponse
     public Guid UserId { get; set; }
     public Model Model { get; set; }
     public ICollection<CarListingPicture> CarListingPictures { get; set; }
+    public ICollection<Review> Reviews { get; set; }
 }
