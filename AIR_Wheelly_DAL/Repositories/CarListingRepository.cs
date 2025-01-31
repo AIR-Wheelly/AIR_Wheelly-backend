@@ -21,6 +21,7 @@ namespace AIR_Wheelly_DAL.Repositories
             return await _dbSet.Include(c => c.Model)
                 .ThenInclude(m => m.Manafacturer)
                 .Include(l => l.Location)
+                .Include(p => p.CarListingPictures.Take(1))
                 .Include(r => r.Reviews)
                 .ThenInclude(u => u.User)
                 .Where(cl => cl.IsActive)

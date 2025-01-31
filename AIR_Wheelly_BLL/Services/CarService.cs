@@ -100,10 +100,14 @@ public class CarService : ICarService
         if (listing is null)
             throw new ArgumentNullException(nameof(CarListing));
 
-        var listingPicutres = files.Select(f => new CarListingPicture()
-        {
-            CarListingId = listingId,
-            Image = Convert.ToBase64String(f)
+        var listingPicutres = files.Select(f => {
+            byte[] downscaledImage = ImageProcessor.DownscaleImage(f, 300, 150);
+            byte[] compressedImage = ImageProcessor.CompressImage(downscaledImage, 30);
+            return new CarListingPicture()
+            {
+                CarListingId = listingId,
+                Image = Convert.ToBase64String(compressedImage)
+            };
         });
 
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
