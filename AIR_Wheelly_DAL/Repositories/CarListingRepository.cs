@@ -22,6 +22,7 @@ namespace AIR_Wheelly_DAL.Repositories
                 .ThenInclude(m => m.Manafacturer)
                 .Include(l => l.Location)
                 .Include(r => r.Reviews)
+                .ThenInclude(u => u.User)
                 .Where(cl => cl.IsActive)
                 .ToListAsync();
         }
@@ -34,6 +35,7 @@ namespace AIR_Wheelly_DAL.Repositories
                 .Include(cl => cl.Location)
                 .Include(cl => cl.CarListingPictures)
                 .Include(cl => cl.Reviews)
+                .ThenInclude(u => u.User)
                 .Where(cl => cl.Id == id)
                 .FirstOrDefaultAsync();
 

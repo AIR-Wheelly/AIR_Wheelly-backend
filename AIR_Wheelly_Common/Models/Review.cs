@@ -14,7 +14,6 @@ namespace AIR_Wheelly_Common.Models
         public Guid UserId { get; set; }
         public Guid CarListingId { get; set; }
 
-        [JsonIgnore]
         public User User { get; set; } = null!;
         [JsonIgnore]
         public CarListing CarListing { get; set; } = null!;
