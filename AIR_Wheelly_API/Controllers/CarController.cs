@@ -52,7 +52,7 @@ public class CarController : ControllerBase
         try
         {
             var newListingId = await _carService.CreateCarListingAsync(carListing);
-            return CreatedAtAction(nameof(GetCarListingById), new { id = newListingId }, new { id = newListingId });
+            return Ok(new { result = new {id = newListingId} });
 
         }
         catch (Exception ex)
