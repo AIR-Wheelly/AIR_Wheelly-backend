@@ -116,12 +116,10 @@ public class CarController : ControllerBase
              var userId = GetUserIdFromToken();
              var rental = await _carService.CreateRentalAsync(userId,dto);
              await _notificationHub.Clients.Group(rental.OwnerId.ToString())
-                 .SendAsync("NotifyOwner", new
+                 .SendAsync("Notification", new
                  {
-                     Message = "New rental request received for your car!",
-                     RentalId = rental.Id,
-                     RenterId = userId,
-                     RentalDate = $"From {rental.StartDate} to {rental.EndDate}"
+                     body = $"New rental request received for your car from {rental.StartDate.ToLocalTime().ToString("dd-MM-yyyy HH:mm")} to {rental.EndDate.ToLocalTime().ToString("dd-MM-yyyy HH:mm")}"
+                   
                  });
              
              return Ok(rental);

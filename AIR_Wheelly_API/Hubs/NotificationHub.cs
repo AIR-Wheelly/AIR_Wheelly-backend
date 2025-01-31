@@ -40,34 +40,4 @@ public class NotificationHub : Hub
 
         await base.OnDisconnectedAsync(exception);
     }
-    public async Task NotifyOwner(Guid reservationId)
-    {
-        Console.WriteLine($"[DEBUG] Notifikacija started for reservationId: {reservationId}");
-
-        var reservation = await _carService.GetCarReservationsByIdAsync(reservationId);
-
-        if (reservation == null)
-        {
-            throw new InvalidOperationException($"Reservation with  {reservationId} not found.");
-        }
-
-        var carListing = await _carService.GetCarListingByIdAsync(reservation.CarListingId);
-
-        if (carListing == null)
-        {
-            throw new InvalidOperationException($"Car with Id :  {reservation.CarListingId} not found");
-        }
-
-        var ownerId = carListing.UserId.ToString();
-
-        var notificationMessage = new
-        {
-            ReservationId = reservationId,
-            Message = $"Nova rezervacija je napravljena za vaše vozilo: {carListing.Model.ManafacturerName}",
-            RenterId = reservation.UserId
-        };
-
-        await Clients.Group(ownerId).SendAsync("NotifyOwner", notificationMessage);
-        Console.WriteLine($"[DEBUG]Notifikacija poslana vlasniku s ID-om: {ownerId}");
-    }
 }
