@@ -29,7 +29,7 @@ namespace AIR_Wheelly_API.Controllers
                 var userId = Guid.Parse(_jwtHelper.GetUserIdFromJwt(authorization.Replace("Bearer ", "").Trim()));
                 var review = await _reviewService.CreateReview(dto, userId);
 
-                return StatusCode(StatusCodes.Status201Created);
+                return Ok(new { Result = new { Message = "Success" } });
             }
             catch (Exception ex)
             {
