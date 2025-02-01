@@ -16,4 +16,5 @@ public interface ICarService
     Task<CarReservationResponse> CreateRentalAsync(Guid userId,CarReservationDTO dto);
     Task<IEnumerable<CarReservationResponse>> GetCarReservationsAsync(Guid userId);
     Task<IEnumerable<CarReservationResponse>> GetCarReservationsForOwner(Guid ownerId);
+    Task<CarReservation> GetCarReservationsByIdAsync(Guid reservationId);
 }
