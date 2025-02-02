@@ -68,7 +68,8 @@ public class CarController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> CarListings()
     {
-        var carListings = await _carService.GetCarListingsAsync();
+        var currentUserId = GetUserIdFromToken();
+        var carListings = await _carService.GetCarListingsAsync(currentUserId);
         return Ok(new { result = carListings });
     }
 
