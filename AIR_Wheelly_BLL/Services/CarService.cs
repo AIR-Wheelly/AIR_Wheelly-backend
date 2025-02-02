@@ -100,10 +100,14 @@ public class CarService : ICarService
         if (listing is null)
             throw new ArgumentNullException(nameof(CarListing));
 
-        var listingPicutres = files.Select(f => new CarListingPicture()
-        {
-            CarListingId = listingId,
-            Image = Convert.ToBase64String(f)
+        var listingPicutres = files.Select(f => {
+            byte[] downscaledImage = ImageProcessor.DownscaleImage(f, 300, 150);
+            byte[] compressedImage = ImageProcessor.CompressImage(downscaledImage, 30);
+            return new CarListingPicture()
+            {
+                CarListingId = listingId,
+                Image = Convert.ToBase64String(compressedImage)
+            };
         });
 
         await _unitOfWork.CarListingPicturesRepository.AddRangeAsync(listingPicutres);
@@ -136,7 +140,8 @@ public class CarService : ICarService
             TotalPrice = carListing.RentalPriceType * (dto.EndDate - dto.StartDate).Days,
             Status = RentalStatus.Confirmed,
             IsPaid = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CarListing = carListing,
         };
 
         await _unitOfWork.CarReservationRepository.AddAsync(rental);
@@ -151,7 +156,7 @@ public class CarService : ICarService
             TotalPrice = rental.TotalPrice,
             Status = rental.Status.ToString(),
             IsPaid = rental.IsPaid,
-            
+            OwnerId = carListing.UserId
         };
         return carReservationResponse;
     }
@@ -170,6 +175,11 @@ public class CarService : ICarService
             Status = r.Status.ToString(),
             IsPaid = r.IsPaid,
         }).ToList();
+    }
+    public async Task<CarReservation> GetCarReservationsByIdAsync(Guid reservationId)
+    {
+        var reservations = await _unitOfWork.CarReservationRepository.GetByIdAsync(reservationId);
+        return reservations;
     }
     public async Task<IEnumerable<CarReservationResponse>> GetCarReservationsForOwner(Guid ownerId)
     {

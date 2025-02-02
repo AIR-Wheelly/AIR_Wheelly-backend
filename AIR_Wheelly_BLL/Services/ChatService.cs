@@ -52,10 +52,14 @@ public class ChatService : IChatService
         {
             await groupManager.AddToGroupAsync(connectionId, reservation.Id.ToString());
         }
+        var reservationsAsOwner = await _unitOfWork.CarReservationRepository.GetReservationForOwner(userId);
+        foreach (var reservation in reservationsAsOwner)
+        {
+            await groupManager.AddToGroupAsync(connectionId, reservation.Id.ToString());
+        }
     }
     public async Task<(Guid OwnerId, Guid RenterId)> GetChatParticipantsAsync(Guid reservationId)
     {
-
         var reservation = await _unitOfWork.CarReservationRepository.GetByIdAsync(reservationId);
         if (reservation == null)
         {
