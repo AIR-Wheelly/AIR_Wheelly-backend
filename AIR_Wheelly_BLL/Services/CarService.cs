@@ -61,9 +61,10 @@ public class CarService : ICarService
         return newCarListing.Id;
     }
 
-    public async Task<IEnumerable<CarListing>> GetCarListingsAsync()
+    public async Task<IEnumerable<CarListing>> GetCarListingsAsync(Guid currentUserId)
     {
-        return await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
+        var listings = await _unitOfWork.CarListingRepository.GetCarListingsWithDetailsAsync();
+        return listings.Where(x => x.UserId != currentUserId);
     }
 
     public async Task<CarListingResponse?> GetCarListingByIdAsync(Guid id)
